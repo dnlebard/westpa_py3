@@ -4,14 +4,16 @@ import mdtraj as md
 import numpy
 import argparse
 
+
 def parse_arguments():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--ref', dest='refpath', required=True)
-    parser.add_argument('--top', dest='toppath', required=True)
-    parser.add_argument('--mob', dest='mobpath', required=True)
-    parser.add_argument('--for', dest='FORM', required=True)
+    parser.add_argument("--ref", dest="refpath", required=True)
+    parser.add_argument("--top", dest="toppath", required=True)
+    parser.add_argument("--mob", dest="mobpath", required=True)
+    parser.add_argument("--for", dest="FORM", required=True)
     args = parser.parse_args()
     return args.refpath, args.toppath, args.mobpath, args.FORM
+
 
 def calc_pcoord(refpath, toppath, mobpath, FORM):
     """ Calculate pcoord (RMSD) using MDTraj and save results to file specified
@@ -51,19 +53,21 @@ def calc_pcoord(refpath, toppath, mobpath, FORM):
 
     # Write RMSD to output file.
     if FORM == "RESTRT":
-	    # We only need the last value in the array.
-	    rmsd = numpy.array(rmsd[-1])
-	    # WESTPA expects a 1x1 array, so we must correct the shape if needed.
+        # We only need the last value in the array.
+        rmsd = numpy.array(rmsd[-1])
+        # WESTPA expects a 1x1 array, so we must correct the shape if needed.
         if rmsd.ndim == 0:
-	    rmsd.shape = (1,)
+            rmsd.shape = (1,)
         numpy.savetxt("rmsd.dat", rmsd)
     else:
         numpy.savetxt("rmsd.dat", rmsd)
+
 
 def main():
     # Get arguments from the caller and pass to calc_pcoord().
     refpath, toppath, mobpath, FORM = parse_arguments()
     calc_pcoord(refpath, toppath, mobpath, FORM)
+
 
 if __name__ == "__main__":
     main()

@@ -1,4 +1,3 @@
-
 """westext.stringmethod - Plugin to drive the adaptive evolution of one or more
 strings of Voronoi bins
 
@@ -34,6 +33,7 @@ class WESTStringMethod(object):
         the string centers
         """
         pass
+
 
 from . import string_method
 from .string_method import DefaultStringMethod

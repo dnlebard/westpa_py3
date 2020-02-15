@@ -5,14 +5,16 @@ from MDAnalysis.analysis.rms import RMSD
 import numpy
 import argparse
 
+
 def parse_arguments():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--ref', dest='refpath', required=True)
-    parser.add_argument('--top', dest='toppath', required=True)
-    parser.add_argument('--mob', dest='mobpath', required=True)
-    parser.add_argument('--for', dest='FORM', required=True)
+    parser.add_argument("--ref", dest="refpath", required=True)
+    parser.add_argument("--top", dest="toppath", required=True)
+    parser.add_argument("--mob", dest="mobpath", required=True)
+    parser.add_argument("--for", dest="FORM", required=True)
     args = parser.parse_args()
     return args.refpath, args.toppath, args.mobpath, args.FORM
+
 
 def calc_pcoord(refpath, toppath, mobpath, FORM):
     """ Calculate pcoord (RMSD) using MDAnalysis and save results to file specified
@@ -46,19 +48,21 @@ def calc_pcoord(refpath, toppath, mobpath, FORM):
     seg_cAlpha = seg_u.select_atoms("name CA")
 
     # Calculate RMSD (relative to initial structure) at each time step.
-    R = RMSD(seg_cAlpha, init_cAlpha, select = 'name CA', center=True, superposition=True)
+    R = RMSD(seg_cAlpha, init_cAlpha, select="name CA", center=True, superposition=True)
     R.run()
 
     # Write RMSD to output file.
     if FORM == "RESTRT":
-        numpy.savetxt("rmsd.dat", R.rmsd[:,2])
+        numpy.savetxt("rmsd.dat", R.rmsd[:, 2])
     else:
-        numpy.savetxt("rmsd.dat", R.rmsd[:,2])
+        numpy.savetxt("rmsd.dat", R.rmsd[:, 2])
+
 
 def main():
     # Get arguments from the caller and pass to calc_pcoord().
     refpath, toppath, mobpath, FORM = parse_arguments()
     calc_pcoord(refpath, toppath, mobpath, FORM)
+
 
 if __name__ == "__main__":
     main()

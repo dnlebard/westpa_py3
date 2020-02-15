@@ -1,6 +1,13 @@
-
-from westtools import (WESTMasterCommand, WESTParallelTool, WESTDataReader, IterRangeSelection, WESTSubcommand, WESTToolComponent, WESTTool,
-                       ProgressIndicatorComponent)
+from westtools import (
+    WESTMasterCommand,
+    WESTParallelTool,
+    WESTDataReader,
+    IterRangeSelection,
+    WESTSubcommand,
+    WESTToolComponent,
+    WESTTool,
+    ProgressIndicatorComponent,
+)
 
 from w_direct import DStateProbs
 import sys, argparse, os
@@ -10,20 +17,22 @@ import work_managers
 # We're making sure it has the appropriate functions so that it can be called
 # as a regular tool, and not a subcommand.
 
+
 class WStateProbs(DStateProbs):
-    subcommand = 'trace'
-    help_text = 'averages and CIs for path-tracing kinetics analysis'
-    default_output_file = 'stateprobs.h5'
+    subcommand = "trace"
+    help_text = "averages and CIs for path-tracing kinetics analysis"
+    default_output_file = "stateprobs.h5"
     # This isn't strictly necessary, but for the moment, here it is.
     # We really need to modify the underlying class so that we don't pull this sort of stuff if it isn't necessary.
     # That'll take some case handling, which is fine.
-    default_kinetics_file = 'assign.h5'
+    default_kinetics_file = "assign.h5"
+
 
 class WDirect(WESTMasterCommand, WESTParallelTool):
-    prog='w_stateprobs'
+    prog = "w_stateprobs"
     subcommands = [WStateProbs]
-    subparsers_title = 'calculate state-to-state kinetics by tracing trajectories'
-    description = '''\
+    subparsers_title = "calculate state-to-state kinetics by tracing trajectories"
+    description = """\
 Calculate average populations and associated errors in state populations from
 weighted ensemble data. Bin assignments, including macrostate definitions,
 are required. (See "w_assign --help" for more information).
@@ -92,15 +101,21 @@ Each of these datasets is also stamped with a number of attributes:
 -----------------------------------------------------------------------------
 Command-line options
 -----------------------------------------------------------------------------
-'''    
+"""
 
-if __name__ == '__main__':
-    print('WARNING: {} is being deprecated.  Please use w_direct instead.'.format(WDirect.prog))
+
+if __name__ == "__main__":
+    print(
+        "WARNING: {} is being deprecated.  Please use w_direct instead.".format(
+            WDirect.prog
+        )
+    )
     # If we're not really supporting subcommands...
     import sys
+
     try:
-        if sys.argv[1] != 'trace':
-            sys.argv.insert(1, 'trace')
+        if sys.argv[1] != "trace":
+            sys.argv.insert(1, "trace")
     except:
-        sys.argv.insert(1, 'trace')
+        sys.argv.insert(1, "trace")
     WDirect().main()
