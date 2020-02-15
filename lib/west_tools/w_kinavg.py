@@ -15,25 +15,32 @@
 # You should have received a copy of the GNU General Public License
 # along with WESTPA.  If not, see <http://www.gnu.org/licenses/>.
 
-from westtools import (WESTMasterCommand, WESTParallelTool, WESTDataReader, IterRangeSelection, WESTSubcommand,
-                       ProgressIndicatorComponent)
+from westtools import (
+    WESTMasterCommand,
+    WESTParallelTool,
+    WESTDataReader,
+    IterRangeSelection,
+    WESTSubcommand,
+    ProgressIndicatorComponent,
+)
 
 from w_direct import DKinAvg
 
 # Just a shim to make sure everything works and is backwards compatible.
 
+
 class WKinAvg(DKinAvg):
-    subcommand = 'trace'
-    help_text = 'averages and CIs for path-tracing kinetics analysis'
-    default_kinetics_file = 'kintrace.h5'
-    default_output_file = 'kinavg.h5'
+    subcommand = "trace"
+    help_text = "averages and CIs for path-tracing kinetics analysis"
+    default_kinetics_file = "kintrace.h5"
+    default_output_file = "kinavg.h5"
 
 
 class WDirect(WESTMasterCommand, WESTParallelTool):
-    prog='w_kinavg'
+    prog = "w_kinavg"
     subcommands = [WKinAvg]
-    subparsers_title = 'direct kinetics analysis schemes'
-    description = '''\
+    subparsers_title = "direct kinetics analysis schemes"
+    description = """\
 Calculate average rates and associated errors from weighted ensemble data. Bin
 assignments (usually "assignments.h5") and kinetics data (usually
 "kintrace.h5" or "kinmat.h5") data files must have been previously generated
@@ -125,14 +132,20 @@ Each of these datasets is also stamped with a number of attributes:
 -----------------------------------------------------------------------------
 Command-line options
 -----------------------------------------------------------------------------
-'''
+"""
 
-if __name__ == '__main__':
-    print('WARNING: {} is being deprecated.  Please use w_direct instead.'.format(WDirect.prog))
+
+if __name__ == "__main__":
+    print(
+        "WARNING: {} is being deprecated.  Please use w_direct instead.".format(
+            WDirect.prog
+        )
+    )
     import sys
+
     try:
-        if sys.argv[1] != 'trace':
-            sys.argv.insert(1, 'trace')
+        if sys.argv[1] != "trace":
+            sys.argv.insert(1, "trace")
     except:
-        sys.argv.insert(1, 'trace')
+        sys.argv.insert(1, "trace")
     WDirect().main()

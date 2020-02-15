@@ -15,24 +15,31 @@
 # You should have received a copy of the GNU General Public License
 # along with WESTPA.  If not, see <http://www.gnu.org/licenses/>.
 
-from westtools import (WESTMasterCommand, WESTParallelTool, WESTDataReader, IterRangeSelection, WESTSubcommand,
-                       ProgressIndicatorComponent)
+from westtools import (
+    WESTMasterCommand,
+    WESTParallelTool,
+    WESTDataReader,
+    IterRangeSelection,
+    WESTSubcommand,
+    ProgressIndicatorComponent,
+)
 
 from w_direct import DKinetics
 
 # Just a shim to make sure everything works and is backwards compatible.
 
+
 class WKinetics(DKinetics):
-    subcommand = 'trace'
-    help_text = 'averages and CIs for path-tracing kinetics analysis'
-    default_output_file = 'kintrace.h5'
+    subcommand = "trace"
+    help_text = "averages and CIs for path-tracing kinetics analysis"
+    default_output_file = "kintrace.h5"
 
 
 class WDirect(WESTMasterCommand, WESTParallelTool):
-    prog='w_kinetics'
+    prog = "w_kinetics"
     subcommands = [WKinetics]
-    subparsers_title = 'calculate state-to-state kinetics by tracing trajectories'
-    description = '''\
+    subparsers_title = "calculate state-to-state kinetics by tracing trajectories"
+    description = """\
 Calculate state-to-state rates and transition event durations by tracing
 trajectories.
 
@@ -93,14 +100,20 @@ into a given state) require no such normalization.
 -----------------------------------------------------------------------------
 Command-line options
 -----------------------------------------------------------------------------
-'''
+"""
 
-if __name__ == '__main__':
-    print('WARNING: {} is being deprecated.  Please use w_direct instead.'.format(WDirect.prog))
+
+if __name__ == "__main__":
+    print(
+        "WARNING: {} is being deprecated.  Please use w_direct instead.".format(
+            WDirect.prog
+        )
+    )
     import sys
+
     try:
-        if sys.argv[1] != 'trace':
-            sys.argv.insert(1, 'trace')
+        if sys.argv[1] != "trace":
+            sys.argv.insert(1, "trace")
     except:
-        sys.argv.insert(1, 'trace')
+        sys.argv.insert(1, "trace")
     WDirect().main()

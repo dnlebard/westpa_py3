@@ -2,12 +2,13 @@
 #
 # aux_functions.py
 #
-# This Python module defines auxilliary functions used during the WESTPA 
+# This Python module defines auxilliary functions used during the WESTPA
 # simulation. In particular, these functions load atomic coordinate data
 # and log files that are output by GROMACS.
 #
 
 import numpy
+
 
 def coord_loader(fieldname, coord_filename, segment, single_point=False):
     """
@@ -22,12 +23,13 @@ def coord_loader(fieldname, coord_filename, segment, single_point=False):
     """
     # Load coordinates
     n_frames = 6
-    n_atoms  = 2
-    coord    = numpy.loadtxt(coord_filename, dtype = numpy.float32)
-    coord    = numpy.reshape(coord, (n_frames, n_atoms, 3))
+    n_atoms = 2
+    coord = numpy.loadtxt(coord_filename, dtype=numpy.float32)
+    coord = numpy.reshape(coord, (n_frames, n_atoms, 3))
 
     # Save to hdf5
     segment.data[fieldname] = coord
+
 
 def log_loader(fieldname, log_filename, segment, single_point=False):
     """
@@ -41,14 +43,14 @@ def log_loader(fieldname, log_filename, segment, single_point=False):
                          (should always be false)
     """
     # Load log
-    with open(log_filename, 'r') as log_file:
+    with open(log_filename, "r") as log_file:
         raw_text = [line.strip() for line in log_file.readlines()]
 
     # Determine number of fields
     n_frames = 6
     n_fields = 0
-    line_i   = 0
-    starts   = []
+    line_i = 0
+    starts = []
     while line_i < len(raw_text):
         line = raw_text[line_i]
         if len(line.split()) > 0:
@@ -65,7 +67,7 @@ def log_loader(fieldname, log_filename, segment, single_point=False):
     dataset = numpy.zeros((n_frames, n_fields), numpy.float32)
 
     # Parse data
-    line_i  = 0
+    line_i = 0
     frame_i = 0
     field_i = 0
     while line_i < len(raw_text):
@@ -81,7 +83,7 @@ def log_loader(fieldname, log_filename, segment, single_point=False):
                     dataset[frame_i, field_i] = float(field)
                     if field_i == n_fields - 1:
                         frame_i += 1
-                        field_i  = 0
+                        field_i = 0
                     else:
                         field_i += 1
         line_i += 1

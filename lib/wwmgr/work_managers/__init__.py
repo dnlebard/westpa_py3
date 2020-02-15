@@ -15,14 +15,15 @@
 # You should have received a copy of the GNU General Public License
 # along with WESTPA.  If not, see <http://www.gnu.org/licenses/>.
 
-'''A system for parallel, remote execution of multiple arbitrary tasks.
+"""A system for parallel, remote execution of multiple arbitrary tasks.
 Much of this, both in concept and execution, was inspired by (and in some 
 cases based heavily on) the ``concurrent.futures`` package from Python 3.2,
 with some simplifications and adaptations (thanks to Brian Quinlan and his
 futures implementation).
-'''
+"""
 
 import logging
+
 log = logging.getLogger(__name__)
 
 from .core import WorkManager, WMFuture, FutureWatcher
@@ -35,29 +36,31 @@ from .serial import SerialWorkManager
 from .threads import ThreadsWorkManager
 from .processes import ProcessWorkManager
 
-_available_work_managers = {'serial': SerialWorkManager,
-                            'threads': ThreadsWorkManager,
-                            'processes': ProcessWorkManager}
+_available_work_managers = {
+    "serial": SerialWorkManager,
+    "threads": ThreadsWorkManager,
+    "processes": ProcessWorkManager,
+}
 
 # Import ZeroMQ work manager if available
 try:
     from . import zeromq
     from .zeromq import ZMQWorkManager
 except ImportError:
-    log.info('ZeroMQ work manager not available')
-    log.debug('traceback follows', exc_info=True)
+    log.info("ZeroMQ work manager not available")
+    log.debug("traceback follows", exc_info=True)
 else:
-    _available_work_managers['zmq'] = ZMQWorkManager
+    _available_work_managers["zmq"] = ZMQWorkManager
 
 # Import MPI work manager if available
 try:
     from . import mpi
     from .mpi import MPIWorkManager
 except ImportError:
-    log.info('MPI work manager not available')
-    log.debug('traceback follows', exc_info=True)
+    log.info("MPI work manager not available")
+    log.debug("traceback follows", exc_info=True)
 else:
-    _available_work_managers['mpi'] = MPIWorkManager
+    _available_work_managers["mpi"] = MPIWorkManager
 
-from . import environment    
+from . import environment
 from .environment import make_work_manager

@@ -1,4 +1,3 @@
-
 import nose
 import nose.tools
 from nose.tools import with_setup
@@ -10,26 +9,26 @@ import h5py
 
 
 class Test_W_Trace_Args(CommonToolTest):
-    '''Class to test w_trace works with different positional arguments (of the form n_iter:seg_id [n_iter:seg_id])
+    """Class to test w_trace works with different positional arguments (of the form n_iter:seg_id [n_iter:seg_id])
     This class tests that a) w_trace works with different numbers of positional arguments, and b) that the output file is set up
     correctly AND the data from subsequent traces is appended (in other words, if there is an existing output file, it
-    is not overwritten each time trace is called)'''
+    is not overwritten each time trace is called)"""
 
-    arg_combos = [['20:0'], ['20:1', '20:2']]
+    arg_combos = [["20:0"], ["20:1", "20:2"]]
 
-    test_name = 'W_TRACE'
+    test_name = "W_TRACE"
 
     def test_args(self):
-        '''Testing arg combos: w_trace runs as expected'''
+        """Testing arg combos: w_trace runs as expected"""
 
         self.args_so_far = []
         self.endpoints = []
-        self.outfile = self.mktemp(prefix='trace')
-        outarg = '-o={}'.format(self.outfile)
+        self.outfile = self.mktemp(prefix="trace")
+        outarg = "-o={}".format(self.outfile)
 
         for args in self.arg_combos:
             self.w = WTraceTool()
-            
+
             self.args_so_far.extend(args)
             args.append(outarg)
             self.w.make_parser_and_process(args=args)
@@ -48,12 +47,23 @@ class Test_W_Trace_Args(CommonToolTest):
 
         with h5py.File(self.outfile) as f:
 
-            assert 'trajectories' in list(f.keys()), "'trajectories' group not in output file"
+            assert "trajectories" in list(
+                f.keys()
+            ), "'trajectories' group not in output file"
 
-            traj_group = f['trajectories']
+            traj_group = f["trajectories"]
 
-            #Expected trace groups - successive runs of w_trace with different traces should add
+            # Expected trace groups - successive runs of w_trace with different traces should add
             # newly traced groups to output hdf5 file
-            expected_groups = sorted([self.w.output_pattern % (n_iter,seg_id) for n_iter, seg_id in self.endpoints])
+            expected_groups = sorted(
+                [
+                    self.w.output_pattern % (n_iter, seg_id)
+                    for n_iter, seg_id in self.endpoints
+                ]
+            )
 
-            assert list(traj_group.keys()) == expected_groups, "H5 groups ({}) are not as expected ({})".format(list(traj_group.keys()), expected_groups)
+            assert (
+                list(traj_group.keys()) == expected_groups
+            ), "H5 groups ({}) are not as expected ({})".format(
+                list(traj_group.keys()), expected_groups
+            )

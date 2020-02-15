@@ -27,7 +27,7 @@ import nose.tools
 
 class TestRateAverating:
     def test_tuple2stats2D(self):
-        StreamingStatsTuple = namedtuple('StreamingStatsTuple', ['M1', 'M2', 'n'])
+        StreamingStatsTuple = namedtuple("StreamingStatsTuple", ["M1", "M2", "n"])
         nbins = 100
         nsets = 10
         data = numpy.random.normal(size=(nsets, nbins, nbins))
@@ -48,7 +48,7 @@ class TestRateAverating:
         assert numpy.allclose(rate_stats.var, rate_stats2.var)
 
     def test_tuple2stats1D(self):
-        StreamingStatsTuple = namedtuple('StreamingStatsTuple', ['M1', 'M2', 'n'])
+        StreamingStatsTuple = namedtuple("StreamingStatsTuple", ["M1", "M2", "n"])
         nbins = 100
         nsets = 10
         data = numpy.random.normal(size=(nsets, nbins))
@@ -68,33 +68,37 @@ class TestRateAverating:
         assert numpy.allclose(rate_stats.mean, rate_stats2.mean)
         assert numpy.allclose(rate_stats.var, rate_stats2.var)
 
+
 class TestKinetics:
     def test_calc_rates(self):
         nbins = 100
-        mask = numpy.zeros((nbins,nbins), numpy.uint8)
+        mask = numpy.zeros((nbins, nbins), numpy.uint8)
 
-        flux_matrix = numpy.random.normal(size=(nbins,nbins))
+        flux_matrix = numpy.random.normal(size=(nbins, nbins))
         rate_matrix = numpy.zeros_like(flux_matrix)
 
         population_vector = numpy.random.random(size=(nbins,)) + 0.0001
-        population_vector[[0,2,5]] = 0.0
+        population_vector[[0, 2, 5]] = 0.0
 
         calc_rates(flux_matrix, population_vector, rate_matrix, mask)
 
-        expected_mask = numpy.zeros((nbins,nbins), numpy.uint8)
-        expected_mask[[0,2,5],:] = 1
+        expected_mask = numpy.zeros((nbins, nbins), numpy.uint8)
+        expected_mask[[0, 2, 5], :] = 1
 
         nzi = numpy.where(population_vector != 0.0)[0]
         expected_rate = numpy.zeros_like(flux_matrix)
-        expected_rate[nzi,:] = flux_matrix[nzi,:] / population_vector[nzi][:,numpy.newaxis]
+        expected_rate[nzi, :] = (
+            flux_matrix[nzi, :] / population_vector[nzi][:, numpy.newaxis]
+        )
 
         assert numpy.all(mask == expected_mask)
         assert numpy.allclose(rate_matrix, expected_rate)
 
-        #row_sum = rate_matrix.sum(axis=1)
-        #for k in xrange(nbins):
-            #print(row_sum[k])
-            #assert numpy.allclose(row_sum[k], 0.0) or numpy.allclose(row_sum[k], 1.0)
+        # row_sum = rate_matrix.sum(axis=1)
+        # for k in xrange(nbins):
+        # print(row_sum[k])
+        # assert numpy.allclose(row_sum[k], 0.0) or numpy.allclose(row_sum[k], 1.0)
+
 
 class TestStreamingStats2D:
     def test_nomask(self):
@@ -117,11 +121,11 @@ class TestStreamingStats2D:
         mask = numpy.zeros((nbins, nbins), numpy.uint8)
 
         rate_stats1 = StreamingStats2D((nbins, nbins))
-        for d in data[:(nbins/2)]:
+        for d in data[: (nbins / 2)]:
             rate_stats1.update(d, mask)
 
         rate_stats2 = StreamingStats2D((nbins, nbins))
-        for d in data[(nbins/2):nbins]:
+        for d in data[(nbins / 2) : nbins]:
             rate_stats2.update(d, mask)
 
         rate_stats3 = rate_stats1 + rate_stats2
@@ -145,8 +149,12 @@ class TestStreamingStats2D:
 
         data_masked = numpy.ma.array(data, mask=mask)
 
-        assert numpy.allclose(rate_stats.mean, data_masked.mean(axis=0).filled(fill_value=0.0))
-        assert numpy.allclose(rate_stats.var, data_masked.var(axis=0).filled(fill_value=0.0))
+        assert numpy.allclose(
+            rate_stats.mean, data_masked.mean(axis=0).filled(fill_value=0.0)
+        )
+        assert numpy.allclose(
+            rate_stats.var, data_masked.var(axis=0).filled(fill_value=0.0)
+        )
 
     def test_with_mask_groups(self):
         nbins = 100
@@ -155,11 +163,11 @@ class TestStreamingStats2D:
         mask = numpy.random.randint(2, size=data.shape).astype(numpy.uint8)
 
         rate_stats1 = StreamingStats2D((nbins, nbins))
-        for di, d in enumerate(data[:(nbins/2)]):
+        for di, d in enumerate(data[: (nbins / 2)]):
             rate_stats1.update(d, mask[di])
 
         rate_stats2 = StreamingStats2D((nbins, nbins))
-        for di, d in enumerate(data[(nbins/2):]):
+        for di, d in enumerate(data[(nbins / 2) :]):
             rate_stats2.update(d, mask[di])
 
         rate_stats3 = rate_stats1 + rate_stats2
@@ -167,11 +175,19 @@ class TestStreamingStats2D:
 
         data_masked = numpy.ma.array(data, mask=mask)
 
-        assert numpy.allclose(rate_stats1.mean, data_masked.mean(axis=0).filled(fill_value=0.0))
-        assert numpy.allclose(rate_stats1.var, data_masked.var(axis=0).filled(fill_value=0.0))
+        assert numpy.allclose(
+            rate_stats1.mean, data_masked.mean(axis=0).filled(fill_value=0.0)
+        )
+        assert numpy.allclose(
+            rate_stats1.var, data_masked.var(axis=0).filled(fill_value=0.0)
+        )
 
-        assert numpy.allclose(rate_stats3.mean, data_masked.mean(axis=0).filled(fill_value=0.0))
-        assert numpy.allclose(rate_stats3.var, data_masked.var(axis=0).filled(fill_value=0.0))
+        assert numpy.allclose(
+            rate_stats3.mean, data_masked.mean(axis=0).filled(fill_value=0.0)
+        )
+        assert numpy.allclose(
+            rate_stats3.var, data_masked.var(axis=0).filled(fill_value=0.0)
+        )
 
 
 class TestStreamingStats1D:
@@ -195,11 +211,11 @@ class TestStreamingStats1D:
         mask = numpy.zeros((nbins,), numpy.uint8)
 
         rate_stats1 = StreamingStats1D(nbins)
-        for d in data[:(nbins/2)]:
+        for d in data[: (nbins / 2)]:
             rate_stats1.update(d, mask)
 
         rate_stats2 = StreamingStats1D(nbins)
-        for d in data[(nbins/2):]:
+        for d in data[(nbins / 2) :]:
             rate_stats2.update(d, mask)
 
         rate_stats3 = rate_stats1 + rate_stats2
@@ -223,8 +239,12 @@ class TestStreamingStats1D:
 
         data_masked = numpy.ma.array(data, mask=mask)
 
-        assert numpy.allclose(rate_stats.mean, data_masked.mean(axis=0).filled(fill_value=0.0))
-        assert numpy.allclose(rate_stats.var, data_masked.var(axis=0).filled(fill_value=0.0))
+        assert numpy.allclose(
+            rate_stats.mean, data_masked.mean(axis=0).filled(fill_value=0.0)
+        )
+        assert numpy.allclose(
+            rate_stats.var, data_masked.var(axis=0).filled(fill_value=0.0)
+        )
 
     def test_with_mask_groups(self):
         nbins = 100
@@ -233,11 +253,11 @@ class TestStreamingStats1D:
         mask = numpy.random.randint(2, size=data.shape).astype(numpy.uint8)
 
         rate_stats1 = StreamingStats1D(nbins)
-        for di, d in enumerate(data[:(nbins/2)]):
+        for di, d in enumerate(data[: (nbins / 2)]):
             rate_stats1.update(d, mask[di])
 
         rate_stats2 = StreamingStats1D(nbins)
-        for di, d in enumerate(data[(nbins/2):]):
+        for di, d in enumerate(data[(nbins / 2) :]):
             rate_stats2.update(d, mask[di])
 
         rate_stats3 = rate_stats1 + rate_stats2
@@ -245,8 +265,16 @@ class TestStreamingStats1D:
 
         data_masked = numpy.ma.array(data, mask=mask)
 
-        assert numpy.allclose(rate_stats1.mean, data_masked.mean(axis=0).filled(fill_value=0.0))
-        assert numpy.allclose(rate_stats1.var, data_masked.var(axis=0).filled(fill_value=0.0))
+        assert numpy.allclose(
+            rate_stats1.mean, data_masked.mean(axis=0).filled(fill_value=0.0)
+        )
+        assert numpy.allclose(
+            rate_stats1.var, data_masked.var(axis=0).filled(fill_value=0.0)
+        )
 
-        assert numpy.allclose(rate_stats3.mean, data_masked.mean(axis=0).filled(fill_value=0.0))
-        assert numpy.allclose(rate_stats3.var, data_masked.var(axis=0).filled(fill_value=0.0))
+        assert numpy.allclose(
+            rate_stats3.mean, data_masked.mean(axis=0).filled(fill_value=0.0)
+        )
+        assert numpy.allclose(
+            rate_stats3.var, data_masked.var(axis=0).filled(fill_value=0.0)
+        )

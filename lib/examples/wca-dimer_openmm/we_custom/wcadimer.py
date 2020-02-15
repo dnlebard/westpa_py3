@@ -1,8 +1,8 @@
 #!/usr/local/bin/env python
 
-#=============================================================================================
+# =============================================================================================
 # MODULE DOCSTRING
-#=============================================================================================
+# =============================================================================================
 
 """
 WCA fluid and WCA dimer systems.
@@ -31,54 +31,57 @@ TODO
 
 """
 
-#=============================================================================================
+# =============================================================================================
 # GLOBAL IMPORTS
-#=============================================================================================
+# =============================================================================================
 
 import numpy
 
 import simtk
 import simtk.unit as units
 import simtk.openmm as openmm
-    
-#=============================================================================================
+
+# =============================================================================================
 # CONSTANTS
-#=============================================================================================
+# =============================================================================================
 
 kB = units.BOLTZMANN_CONSTANT_kB * units.AVOGADRO_CONSTANT_NA
 
-#=============================================================================================
+# =============================================================================================
 # DEFAULT PARAMETERS
-#=============================================================================================
+# =============================================================================================
 
-natoms = 216                             # number of particles
+natoms = 216  # number of particles
 
 # WCA fluid parameters (argon).
-mass     = 39.9 * units.amu              # reference mass
-sigma    = 3.4 * units.angstrom          # reference lengthscale
-epsilon  = 120.0 * units.kelvin * kB     # reference energy
+mass = 39.9 * units.amu  # reference mass
+sigma = 3.4 * units.angstrom  # reference lengthscale
+epsilon = 120.0 * units.kelvin * kB  # reference energy
 
-r_WCA    = 2.**(1./6.) * sigma           # interaction truncation range
-tau = units.sqrt(sigma**2 * mass / epsilon) # characteristic timescale
+r_WCA = 2.0 ** (1.0 / 6.0) * sigma  # interaction truncation range
+tau = units.sqrt(sigma ** 2 * mass / epsilon)  # characteristic timescale
 
 # Simulation conditions.
-temperature = 0.824 / (kB / epsilon)     # temperature
-kT = kB * temperature                    # thermal energy
-beta = 1.0 / kT                          # inverse temperature    
-density  = 0.96 / sigma**3               # default density
-stable_timestep = 0.001 * tau            # stable timestep
-collision_rate = 1 / tau                 # collision rate for Langevin interator
+temperature = 0.824 / (kB / epsilon)  # temperature
+kT = kB * temperature  # thermal energy
+beta = 1.0 / kT  # inverse temperature
+density = 0.96 / sigma ** 3  # default density
+stable_timestep = 0.001 * tau  # stable timestep
+collision_rate = 1 / tau  # collision rate for Langevin interator
 
 # Dimer potential parameters.
-h = 5.0 * kT                             # barrier height
-r0 = r_WCA                               # compact state distance
-w = 0.5 * r_WCA                          # extended state distance is r0 + 2*w
+h = 5.0 * kT  # barrier height
+r0 = r_WCA  # compact state distance
+w = 0.5 * r_WCA  # extended state distance is r0 + 2*w
 
-#=============================================================================================
+# =============================================================================================
 # WCA Fluid
-#=============================================================================================
+# =============================================================================================
 
-def WCAFluid(N=natoms, density=density, mm=None, mass=mass, epsilon=epsilon, sigma=sigma):
+
+def WCAFluid(
+    N=natoms, density=density, mm=None, mass=mass, epsilon=epsilon, sigma=sigma
+):
     """
     Create a Weeks-Chandler-Andersen system.
 
@@ -100,53 +103,79 @@ def WCAFluid(N=natoms, density=density, mm=None, mass=mass, epsilon=epsilon, sig
 
     # Compute total system volume.
     volume = N / density
-    
+
     # Make system cubic in dimension.
-    length = volume**(1.0/3.0)
+    length = volume ** (1.0 / 3.0)
     # TODO: Can we change this to use tuples or 3x3 array?
-    a = units.Quantity(numpy.array([1.0, 0.0, 0.0], numpy.float32), units.nanometer) * length/units.nanometer
-    b = units.Quantity(numpy.array([0.0, 1.0, 0.0], numpy.float32), units.nanometer) * length/units.nanometer
-    c = units.Quantity(numpy.array([0.0, 0.0, 1.0], numpy.float32), units.nanometer) * length/units.nanometer
+    a = (
+        units.Quantity(numpy.array([1.0, 0.0, 0.0], numpy.float32), units.nanometer)
+        * length
+        / units.nanometer
+    )
+    b = (
+        units.Quantity(numpy.array([0.0, 1.0, 0.0], numpy.float32), units.nanometer)
+        * length
+        / units.nanometer
+    )
+    c = (
+        units.Quantity(numpy.array([0.0, 0.0, 1.0], numpy.float32), units.nanometer)
+        * length
+        / units.nanometer
+    )
     print("box edge length = %s" % str(length))
     system.setDefaultPeriodicBoxVectors(a, b, c)
 
     # Add particles to system.
     for n in range(N):
         system.addParticle(mass)
-            
+
     # Create nonbonded force term implementing Kob-Andersen two-component Lennard-Jones interaction.
-    energy_expression = '4.0*epsilon*((sigma/r)^12 - (sigma/r)^6) + epsilon'
+    energy_expression = "4.0*epsilon*((sigma/r)^12 - (sigma/r)^6) + epsilon"
 
     # Create force.
     force = mm.CustomNonbondedForce(energy_expression)
 
     # Set epsilon and sigma global parameters.
-    force.addGlobalParameter('epsilon', epsilon)
-    force.addGlobalParameter('sigma', sigma)
+    force.addGlobalParameter("epsilon", epsilon)
+    force.addGlobalParameter("sigma", sigma)
 
     # Add particles
     for n in range(N):
-        force.addParticle([])    
-    
+        force.addParticle([])
+
     # Set periodic boundary conditions with cutoff.
     force.setNonbondedMethod(mm.CustomNonbondedForce.CutoffNonPeriodic)
     print("setting cutoff distance to %s" % str(r_WCA))
-    force.setCutoffDistance(r_WCA)    
+    force.setCutoffDistance(r_WCA)
 
     # Add nonbonded force term to the system.
     system.addForce(force)
 
     # Create initial coordinates using random positions.
-    coordinates = units.Quantity(numpy.random.rand(N,3), units.nanometer) * (length / units.nanometer)
-       
+    coordinates = units.Quantity(numpy.random.rand(N, 3), units.nanometer) * (
+        length / units.nanometer
+    )
+
     # Return system and coordinates.
     return [system, coordinates]
 
-#=============================================================================================
-# WCA dimer plus fluid
-#=============================================================================================
 
-def WCADimer(N=natoms, density=density, mm=None, mass=mass, epsilon=epsilon, sigma=sigma, h=h, r0=r0, w=w):
+# =============================================================================================
+# WCA dimer plus fluid
+# =============================================================================================
+
+
+def WCADimer(
+    N=natoms,
+    density=density,
+    mm=None,
+    mass=mass,
+    epsilon=epsilon,
+    sigma=sigma,
+    h=h,
+    r0=r0,
+    w=w,
+):
     """
     Create a bistable bonded pair of particles (indices 0 and 1) optionally surrounded by a Weeks-Chandler-Andersen fluid.
 
@@ -175,82 +204,98 @@ def WCADimer(N=natoms, density=density, mm=None, mass=mass, epsilon=epsilon, sig
     w (simtk.unit.Quantity of length) - bistable potential extended state separation is r0+2*w (default: ???)
 
     """
-    
+
     # Choose OpenMM package.
     if mm is None:
         mm = openmm
 
     # Compute cutoff for WCA fluid.
-    r_WCA = 2.**(1./6.) * sigma # cutoff at minimum of potential
+    r_WCA = 2.0 ** (1.0 / 6.0) * sigma  # cutoff at minimum of potential
 
     # Create system
     system = mm.System()
 
     # Compute total system volume.
     volume = N / density
-    
+
     # Make system cubic in dimension.
-    length = volume**(1.0/3.0)
-    a = units.Quantity(numpy.array([1.0, 0.0, 0.0], numpy.float32), units.nanometer) * length/units.nanometer
-    b = units.Quantity(numpy.array([0.0, 1.0, 0.0], numpy.float32), units.nanometer) * length/units.nanometer
-    c = units.Quantity(numpy.array([0.0, 0.0, 1.0], numpy.float32), units.nanometer) * length/units.nanometer
+    length = volume ** (1.0 / 3.0)
+    a = (
+        units.Quantity(numpy.array([1.0, 0.0, 0.0], numpy.float32), units.nanometer)
+        * length
+        / units.nanometer
+    )
+    b = (
+        units.Quantity(numpy.array([0.0, 1.0, 0.0], numpy.float32), units.nanometer)
+        * length
+        / units.nanometer
+    )
+    c = (
+        units.Quantity(numpy.array([0.0, 0.0, 1.0], numpy.float32), units.nanometer)
+        * length
+        / units.nanometer
+    )
     print("box edge length = %s" % str(length))
     system.setDefaultPeriodicBoxVectors(a, b, c)
 
     # Add particles to system.
     for n in range(N):
         system.addParticle(mass)
-            
+
     # WCA: Lennard-Jones truncated at minim and shifted so potential is zero at cutoff.
-    energy_expression = '4.0*epsilon*((sigma/r)^12 - (sigma/r)^6) + epsilon'
-    
+    energy_expression = "4.0*epsilon*((sigma/r)^12 - (sigma/r)^6) + epsilon"
+
     # Create force.
     force = mm.CustomNonbondedForce(energy_expression)
 
     # Set epsilon and sigma global parameters.
-    force.addGlobalParameter('epsilon', epsilon)
-    force.addGlobalParameter('sigma', sigma)
+    force.addGlobalParameter("epsilon", epsilon)
+    force.addGlobalParameter("sigma", sigma)
 
     # Add particles
     for n in range(N):
         force.addParticle([])
 
     # Add exclusion between bonded particles.
-    force.addExclusion(0,1)
-    
+    force.addExclusion(0, 1)
+
     # Set periodic boundary conditions with cutoff.
-    if (N > 2):
+    if N > 2:
         force.setNonbondedMethod(mm.CustomNonbondedForce.CutoffPeriodic)
     else:
         force.setNonbondedMethod(mm.CustomNonbondedForce.CutoffNonPeriodic)
     print("setting cutoff distance to %s" % str(r_WCA))
-    force.setCutoffDistance(r_WCA)    
+    force.setCutoffDistance(r_WCA)
 
     # Add nonbonded force term to the system.
     system.addForce(force)
 
     # Add dimer potential to first two particles.
-    dimer_force = openmm.CustomBondForce('h*(1-((r-r0-w)/w)^2)^2;')
-    dimer_force.addGlobalParameter('h', h) # barrier height
-    dimer_force.addGlobalParameter('r0', r0) # compact state separation
-    dimer_force.addGlobalParameter('w', w) # second minimum is at r0 + 2*w
+    dimer_force = openmm.CustomBondForce("h*(1-((r-r0-w)/w)^2)^2;")
+    dimer_force.addGlobalParameter("h", h)  # barrier height
+    dimer_force.addGlobalParameter("r0", r0)  # compact state separation
+    dimer_force.addGlobalParameter("w", w)  # second minimum is at r0 + 2*w
     dimer_force.addBond(0, 1, [])
     system.addForce(dimer_force)
 
     # Create initial coordinates using random positions.
-    coordinates = units.Quantity(numpy.random.rand(N,3), units.nanometer) * (length / units.nanometer)
-       
+    coordinates = units.Quantity(numpy.random.rand(N, 3), units.nanometer) * (
+        length / units.nanometer
+    )
+
     # Reposition dimer particles at compact minimum.
-    coordinates[0,:] *= 0.0
-    coordinates[1,:] *= 0.0
-    coordinates[1,0] = r0
+    coordinates[0, :] *= 0.0
+    coordinates[1, :] *= 0.0
+    coordinates[1, 0] = r0
 
     # Return system and coordinates.
     return [system, coordinates]
 
-#=============================================================================================
+
+# =============================================================================================
 # WCA dimer in vacuum
-#=============================================================================================
+# =============================================================================================
+
 
 def WCADimerVacuum(mm=None, mass=mass, epsilon=epsilon, sigma=sigma, h=h, r0=r0, w=w):
     """
@@ -259,7 +304,7 @@ def WCADimerVacuum(mm=None, mass=mass, epsilon=epsilon, sigma=sigma, h=h, r0=r0,
     OPTIONAL ARGUMENTS
 
     """
-    
+
     # Choose OpenMM package.
     if mm is None:
         mm = openmm
@@ -272,21 +317,20 @@ def WCADimerVacuum(mm=None, mass=mass, epsilon=epsilon, sigma=sigma, h=h, r0=r0,
         system.addParticle(mass)
 
     # Add dimer potential to first two particles.
-    dimer_force = openmm.CustomBondForce('h*(1-((r-r0-w)/w)^2)^2;')
-    dimer_force.addGlobalParameter('h', h) # barrier height
-    dimer_force.addGlobalParameter('r0', r0) # compact state separation
-    dimer_force.addGlobalParameter('w', w) # second minimum is at r0 + 2*w
+    dimer_force = openmm.CustomBondForce("h*(1-((r-r0-w)/w)^2)^2;")
+    dimer_force.addGlobalParameter("h", h)  # barrier height
+    dimer_force.addGlobalParameter("r0", r0)  # compact state separation
+    dimer_force.addGlobalParameter("w", w)  # second minimum is at r0 + 2*w
     dimer_force.addBond(0, 1, [])
     system.addForce(dimer_force)
 
     # Create initial coordinates using random positions.
-    coordinates = units.Quantity(numpy.zeros([2,3], numpy.float64), units.nanometer)
-       
+    coordinates = units.Quantity(numpy.zeros([2, 3], numpy.float64), units.nanometer)
+
     # Reposition dimer particles at compact minimum.
-    coordinates[0,:] *= 0.0
-    coordinates[1,:] *= 0.0
-    coordinates[1,0] = r0
+    coordinates[0, :] *= 0.0
+    coordinates[1, :] *= 0.0
+    coordinates[1, 0] = r0
 
     # Return system and coordinates.
     return [system, coordinates]
-

@@ -51,6 +51,7 @@ class WESTStringMethod(object):
         """
         pass
 
+
 from . import string_method
 from .string_method import DefaultStringMethod
 

@@ -1,4 +1,5 @@
 import logging
+
 log = logging.getLogger(__name__)
 
 
@@ -7,15 +8,17 @@ class RestartDriver(object):
         super(RestartDriver, self).__init__()
 
         if not sim_manager.work_manager.is_master:
-                return
+            return
 
         self.sim_manager = sim_manager
         self.data_manager = sim_manager.data_manager
         self.system = sim_manager.system
-        self.priority = plugin_config.get('priority', 0)
+        self.priority = plugin_config.get("priority", 0)
 
         # Register callback
-        sim_manager.register_callback(sim_manager.pre_propagation, self.pre_propagation, self.priority)
+        sim_manager.register_callback(
+            sim_manager.pre_propagation, self.pre_propagation, self.priority
+        )
 
     def pre_propagation(self):
 
@@ -34,17 +37,17 @@ class RestartDriver(object):
         unique_parent_ids = set(parent_ids)
         restart_data = {segid: {} for segid in unique_parent_ids}
 
-        for dsname in ['coord', 'veloc']:
+        for dsname in ["coord", "veloc"]:
             try:
                 dsinfo = self.data_manager.dataset_options[dsname]
             except KeyError:
-                raise KeyError('Data set {} not found'.format(dsname))
+                raise KeyError("Data set {} not found".format(dsname))
 
-            ds = parent_iter_group[dsinfo['h5path']]
+            ds = parent_iter_group[dsinfo["h5path"]]
 
             for seg_id in unique_parent_ids:
-                restart_data[seg_id][dsname] = ds[seg_id][-1,...]
+                restart_data[seg_id][dsname] = ds[seg_id][-1, ...]
 
         for segment in segments:
-            segment.data['restart_coord'] = restart_data[segment.parent_id]['coord']
-            segment.data['restart_veloc'] = restart_data[segment.parent_id]['veloc']
+            segment.data["restart_coord"] = restart_data[segment.parent_id]["coord"]
+            segment.data["restart_veloc"] = restart_data[segment.parent_id]["veloc"]
