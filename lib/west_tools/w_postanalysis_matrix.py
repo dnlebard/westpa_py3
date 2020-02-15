@@ -1,6 +1,13 @@
-
-from westtools import (WESTMasterCommand, WESTParallelTool, WESTDataReader, IterRangeSelection, WESTSubcommand, WESTToolComponent, WESTTool,
-                       ProgressIndicatorComponent)
+from westtools import (
+    WESTMasterCommand,
+    WESTParallelTool,
+    WESTDataReader,
+    IterRangeSelection,
+    WESTSubcommand,
+    WESTToolComponent,
+    WESTTool,
+    ProgressIndicatorComponent,
+)
 
 from w_reweight import RWMatrix
 import sys, argparse, os
@@ -10,20 +17,22 @@ import work_managers
 # We're making sure it has the appropriate functions so that it can be called
 # as a regular tool, and not a subcommand.
 
+
 class PAMatrix(RWMatrix):
-    subcommand = 'init'
-    help_text = 'averages and CIs for path-tracing kinetics analysis'
-    default_output_file = 'flux_matrices.h5'
+    subcommand = "init"
+    help_text = "averages and CIs for path-tracing kinetics analysis"
+    default_output_file = "flux_matrices.h5"
     # This isn't strictly necessary, but for the moment, here it is.
     # We really need to modify the underlying class so that we don't pull this sort of stuff if it isn't necessary.
     # That'll take some case handling, which is fine.
-    #default_kinetics_file = 'assign.h5'
+    # default_kinetics_file = 'assign.h5'
+
 
 class WReweight(WESTMasterCommand, WESTParallelTool):
-    prog='w_postanalysis_matrix'
+    prog = "w_postanalysis_matrix"
     subcommands = [PAMatrix]
-    subparsers_title = 'calculate state-to-state kinetics by tracing trajectories'
-    description = '''\
+    subparsers_title = "calculate state-to-state kinetics by tracing trajectories"
+    description = """\
 Generate a colored transition matrix from a WE assignment file. The subsequent
 analysis requires that the assignments are calculated using only the initial and 
 final time points of each trajectory segment. This may require downsampling the
@@ -63,15 +72,21 @@ following datasets:
 -----------------------------------------------------------------------------
 Command-line options
 -----------------------------------------------------------------------------
-'''
+"""
 
-if __name__ == '__main__':
-    print('WARNING: {} is being deprecated.  Please use w_reweight instead.'.format(WReweight.prog))
+
+if __name__ == "__main__":
+    print(
+        "WARNING: {} is being deprecated.  Please use w_reweight instead.".format(
+            WReweight.prog
+        )
+    )
     # If we're not really supporting subcommands...
     import sys
+
     try:
-        if sys.argv[1] != 'init':
-            sys.argv.insert(1, 'init')
+        if sys.argv[1] != "init":
+            sys.argv.insert(1, "init")
     except:
-        sys.argv.insert(1, 'init')
+        sys.argv.insert(1, "init")
     WReweight().main()
