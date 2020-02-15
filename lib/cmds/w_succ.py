@@ -93,27 +93,28 @@ class WSucc(CommonOutputMixin, WESTDataReaderMixin, WESTAnalysisTool):
                 self.output_file.write("\n")
 
 
-wsucc = WSucc()
+if __name__ == '__main__':
+    wsucc = WSucc()
 
-parser = argparse.ArgumentParser(
-    "w_succ",
-    description="""\
-List segments which successfully reach a target state""",
-)
-westpa.rc.add_args(parser)
-wsucc.add_args(parser)
+    parser = argparse.ArgumentParser(
+        "w_succ",
+        description="""\
+    List segments which successfully reach a target state""",
+    )
+    westpa.rc.add_args(parser)
+    wsucc.add_args(parser)
 
-parser.add_argument(
-    "-o",
-    "--output",
-    dest="output_file",
-    help="Store output in OUTPUT_FILE (default: write to standard output).",
-    type=argparse.FileType("wt"),
-    default=sys.stdout,
-)
-args = parser.parse_args()
-westpa.rc.process_args(args, config_required=False)
-wsucc.process_args(args)
-wsucc.output_file = args.output_file
+    parser.add_argument(
+        "-o",
+        "--output",
+        dest="output_file",
+        help="Store output in OUTPUT_FILE (default: write to standard output).",
+        type=argparse.FileType("wt"),
+        default=sys.stdout,
+    )
+    args = parser.parse_args()
+    westpa.rc.process_args(args, config_required=False)
+    wsucc.process_args(args)
+    wsucc.output_file = args.output_file
 
-wsucc.find_successful_trajs()
+    wsucc.find_successful_trajs()

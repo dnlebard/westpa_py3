@@ -46,12 +46,6 @@ setup(
             extra_compile_args=["-O3"],
         ),
         Extension(
-            "trajtree._trajtree",
-            ["trajtree/_trajtree.{}".format(suffix)],
-            include_dirs=[".", numpy_include],
-            extra_compile_args=["-O3"],
-        ),
-        Extension(
             "mclib._mclib",
             ["mclib/_mclib.{}".format(suffix)],
             include_dirs=[".", numpy_include],

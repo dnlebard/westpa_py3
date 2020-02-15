@@ -34,7 +34,7 @@ import logging, warnings
 
 log = logging.getLogger(__name__)
 
-from _kinetics import (
+from ._kinetics import (
     calculate_labeled_fluxes,  # @UnresolvedImport
     calculate_labeled_fluxes_alllags,  # @UnresolvedImport
     labeled_flux_to_rate,  # @UnresolvedImport

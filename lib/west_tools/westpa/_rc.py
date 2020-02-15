@@ -121,6 +121,7 @@ class WESTRC:
         )
 
         self.config = YAMLConfig()
+        print(os.path.basename(sys.argv[0]))
         self.process_name = os.path.splitext(os.path.basename(sys.argv[0]))[0]
 
         # Crucial simulation and analysis drivers
