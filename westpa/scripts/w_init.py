@@ -16,23 +16,22 @@
 # along with WESTPA.  If not, see <http://www.gnu.org/licenses/>.
 
 
-import os, sys, logging, numpy, operator, argparse
+import sys
+import logging
+import numpy
+import argparse
 import io
-
-log = logging.getLogger("w_init")
 
 from westpa import work_managers
 from westpa.work_managers import make_work_manager
 
 import westpa
-from westpa.segment import Segment
 from westpa.states import (
     BasisState,
     TargetState,
-    InitialState,
-    pare_basis_initial_states,
 )
 
+log = logging.getLogger("w_init")
 EPS = numpy.finfo(numpy.float64).eps
 
 if __name__ == "__main__":

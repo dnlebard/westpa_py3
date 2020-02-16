@@ -96,7 +96,9 @@ class WEDriver:
 
     def __init__(self, rc=None, system=None):
         self.rc = rc or westpa.rc
-        self.system = system or self.rc.get_system_driver()
+        if system is None:
+            system = self.rc.get_system_driver()
+        self.system = system
 
         # Whether to adjust counts to exactly match target count
         self.do_adjust_counts = True

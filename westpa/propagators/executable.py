@@ -109,7 +109,7 @@ class ExecutablePropagator(WESTPropagator):
     ENV_RANDFLOAT = "WEST_RANDFLOAT"
 
     def __init__(self, rc=None):
-        super(ExecutablePropagator, self).__init__(rc)
+        super().__init__(rc)
 
         # A mapping of environment variables to template strings which will be
         # added to the environment of all children launched.
@@ -585,7 +585,7 @@ class ExecutablePropagator(WESTPropagator):
                     )
                     del_return_files[dataset] = False
                 else:
-                    (fd, rfname) = tempfile.mkstemp()
+                    fd, rfname = tempfile.mkstemp()
                     os.close(fd)
                     return_files[dataset] = rfname
                     del_return_files[dataset] = True
@@ -596,7 +596,6 @@ class ExecutablePropagator(WESTPropagator):
 
             # Spawn propagator and wait for its completion
             rc, rusage = self.exec_for_segment(child_info, segment, addtl_env)
-
             if rc == 0:
                 segment.status = Segment.SEG_STATUS_COMPLETE
             elif rc < 0:

@@ -20,7 +20,9 @@
 # Foundation. See http://docs.python.org/3/license.html for more information.
 
 import logging
-import uuid, threading, signal
+import uuid
+import threading
+import signal
 import h5py
 from itertools import islice
 from contextlib import contextmanager
@@ -348,7 +350,7 @@ class WMFuture:
         with self._condition:
             if self._done:
                 if self._exception:
-                    if isinstance(self._traceback, h5py.string_dtype(encoding="utf-8")):
+                    if isinstance(self._traceback, str):
                         if self._traceback:
                             log.error(
                                 "uncaught exception in remote function\n{}".format(
