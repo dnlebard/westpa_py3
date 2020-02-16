@@ -2,7 +2,7 @@ import logging
 import argparse
 import traceback
 
-import westpa
+from westpa import rc
 from westpa import work_managers
 from westpa.work_managers import make_work_manager
 
@@ -10,7 +10,7 @@ log = logging.getLogger("w_run")
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser("w_run", "start/continue a WEST simulation")
-    westpa.rc.add_args(parser)
+    rc.add_args(parser)
     parser.add_argument(
         "--oneseg",
         dest="only_one_segment",
@@ -21,16 +21,16 @@ if __name__ == "__main__":
     work_managers.environment.add_wm_args(parser)
 
     args = parser.parse_args()
-    westpa.rc.process_args(args)
+    rc.process_args(args)
     work_managers.environment.process_wm_args(args)
-    work_manager = westpa.rc.work_manager = make_work_manager()
+    work_manager = rc.work_manager = make_work_manager()
 
     # Load the sim manager and other drivers
-    sim_manager = westpa.rc.get_sim_manager()
-    system = westpa.rc.get_system_driver()
-    data_manager = westpa.rc.get_data_manager()
-    we_driver = westpa.rc.get_we_driver()
-    propagator = westpa.rc.get_propagator()
+    sim_manager = rc.get_sim_manager()
+    system = rc.get_system_driver()
+    data_manager = rc.get_data_manager()
+    we_driver = rc.get_we_driver()
+    propagator = rc.get_propagator()
 
     propagator.system = system
     data_manager.system = system
@@ -56,9 +56,9 @@ if __name__ == "__main__":
                 log.debug("finalizing run")
                 sim_manager.finalize_run()
             except KeyboardInterrupt:
-                westpa.rc.pstatus("interrupted; shutting down")
+                rc.pstatus("interrupted; shutting down")
             except Exception:
-                westpa.rc.pstatus("exception caught; shutting down")
+                rc.pstatus("exception caught; shutting down")
                 log.error(traceback.format_exc())
         else:
             work_manager.run()

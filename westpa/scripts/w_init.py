@@ -12,6 +12,7 @@ from westpa.states import TargetState
 
 log = logging.getLogger("w_init")
 
+log = logging.getLogger("w_init")
 EPS = numpy.finfo(numpy.float64).eps
 
 if __name__ == "__main__":
