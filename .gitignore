@@ -8,9 +8,12 @@
 *.swp
 *.swo
 *.so
-build/
 __pycache__
 *.log
 *.h5
 westpa.sh
 westpa.csh
+# Python Packaging
+build/
+dist/
+*.egg-info/
