@@ -641,7 +641,7 @@ user:        Matt Zwier <mczwier@gmail.com>
 date:        Mon Mar 25 14:53:12 2013 -0400
 files:       fasthist/__init__.py plothist.py w_assign.py w_fluxanl.py w_kinavg.py w_kinetics.py w_pcpdist.py w_pdist.py westpa/h5io.py westpa/textio.py westtools/__init__.py westtools/h5io.py westtools/textio.py westtools/tool_classes/core.py westtools/tool_classes/iter_range.py
 description:
-Moved h5io and textio from westtools/ to westpa/ to avoid an import conflict
+Moved h5io and textio from westpa.westtools/ to westpa/ to avoid an import conflict
 with data_manager.py. Fixed multiple problems with plothist, particularly for
 3-D cases. Made DSSpecs (w_pdist) picklable and parallelized w_pdist. w_assign
 now accepts a function that returns a bin-to-state mapping in the same rough
