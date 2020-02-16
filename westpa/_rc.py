@@ -211,7 +211,6 @@ class WESTRC:
         if "WEST_SIM_ROOT" not in os.environ:
             # sys.stderr.write('-- WARNING -- setting $WEST_SIM_ROOT to current directory ({})\n'.format(os.getcwd()))
             os.environ["WEST_SIM_ROOT"] = os.getcwd()
-
         self.config.update_from_file(self.rcfile)
 
     def config_logging(self):
@@ -332,7 +331,9 @@ class WESTRC:
 
         drivername = self.config.get(["west", "drivers", "we_driver"], "default")
         if drivername.lower() == "default":
-            we_driver = westpa.we_driver.WEDriver()
+            we_driver = westpa.we_driver.WEDriver(
+                rc=self, system=self.get_system_driver()
+            )
         else:
             we_driver = extloader.get_object(drivername)(rc=self)
         log.debug("loaded WE algorithm driver: {!r}".format(we_driver))
@@ -348,7 +349,7 @@ class WESTRC:
         if drivername.lower() == "executable":
             from westpa.propagators import executable
 
-            propagator = executable.ExecutablePropagator()
+            propagator = executable.ExecutablePropagator(rc=self)
         else:
             propagator = extloader.get_object(drivername)(rc=self)
         log.debug("loaded propagator {!r}".format(propagator))
@@ -418,7 +419,6 @@ class WESTRC:
                 system = self.update_from_yaml(system, yamloptions)
             else:
                 system = self.system_from_yaml(yamloptions)
-
         if system:
             if not yamloptions:
                 print("System is being built only off of the system driver")

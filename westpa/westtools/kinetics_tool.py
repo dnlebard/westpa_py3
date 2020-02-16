@@ -317,7 +317,7 @@ class AverageCommands(WESTKineticsBase):
             futures = []
             for iblock, start in enumerate(start_pts):
                 stop = min(start + step_iter, stop_iter)
-                if self.evolution_mode == "cumulative" or do_averages == True:
+                if self.evolution_mode == "cumulative" or do_averages:
                     windowsize = int(self.evol_window_frac * (stop - start_iter))
                     block_start = max(start_iter, stop - windowsize)
                 else:  # self.evolution_mode == 'blocked'
@@ -351,7 +351,7 @@ class AverageCommands(WESTKineticsBase):
                             if hasattr(value, "iter_slice")
                             else value[block_start:stop]
                         )
-                    except:
+                    except Exception:
                         future_kwargs["data_input"][key] = (
                             value.iter_slice(block_start, stop)
                             if hasattr(value, "iter_slice")

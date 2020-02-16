@@ -26,26 +26,31 @@ def load_module(module_name, path=None):
         # This will raise ImportError if next_component is not found
         # (as one would hope)
         log.debug("find_module({!r},{!r})".format(next_component, path))
-        (fp, pathname, desc) = imp.find_module(next_component, path)
+        fp, pathname, desc = imp.find_module(next_component, path)
 
         qname = ".".join(qname_components)
-        try:
-            module = imp.load_module(qname, fp, pathname, desc)
-        finally:
+        # If the subcomponenet is already loaded, skip it
+        if qname in sys.modules:
+            log.debug("Skipping preloaded module {}".format(qname))
+            module = sys.modules[qname]
+        else:
             try:
-                fp.close()
-            except AttributeError:
-                pass
+                module = imp.load_module(qname, fp, pathname, desc)
+            finally:
+                try:
+                    fp.close()
+                except AttributeError:
+                    pass
 
-        # make the module appear in sys.modules
-        sys.modules[qname] = module
+            # make the module appear in sys.modules
+            sys.modules[qname] = module
         mod_chain.append(module)
 
         # Make the module appear in the parent module's namespace
         if parent:
             setattr(parent, next_component, module)
 
-        log.debug("module %r loaded" % qname)
+        log.debug("module {} loaded".format(qname))
 
     return module
 
