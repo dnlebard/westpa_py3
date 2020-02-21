@@ -15,11 +15,10 @@
 # You should have received a copy of the GNU General Public License
 # along with WESTPA.  If not, see <http://www.gnu.org/licenses/>.
 import glob
-from distutils.core import setup
-from setuptools import find_packages
-from distutils.extension import Extension
-
+from setuptools import setup, find_packages
+from setuptools.extension import Extension
 import numpy
+
 
 numpy_include = numpy.get_include()
 
@@ -36,12 +35,14 @@ finally:
 
 suffix = "pyx" if use_cython else "c"
 
+scripts = glob.glob("westpa/scripts/*.py")
+
 setup(
     name="westpa",
     packages=find_packages(),
-    version="0.0.2",
+    version="0.0.5",
     cmdclass=cmdclass,
-    scripts=glob.glob("westpa/scripts/*.py"),
+    scripts=scripts,
     install_requires=["blessings", "h5py", "pyyaml", "scipy", "matplotlib"],
     ext_modules=[
         Extension(
