@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 # Copyright (C) 2017 Matthew C. Zwier and Lillian T. Chong
 #
 # This file is part of WESTPA.

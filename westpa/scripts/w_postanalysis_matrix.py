@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 # Copyright (C) 2017 Matthew C. Zwier and Lillian T. Chong
 #
 # This file is part of WESTPA.
@@ -18,17 +19,10 @@
 from westpa.westtools import (
     WESTMasterCommand,
     WESTParallelTool,
-    WESTDataReader,
-    IterRangeSelection,
-    WESTSubcommand,
-    WESTToolComponent,
-    WESTTool,
-    ProgressIndicatorComponent,
 )
 
 from westpa.scripts.w_reweight import RWMatrix
 import sys
-from westpa import work_managers
 
 # Just a shim to make sure everything works and is backwards compatible.
 # We're making sure it has the appropriate functions so that it can be called

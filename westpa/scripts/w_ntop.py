@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 # Copyright (C) 2013 Matthew C. Zwier and Lillian T. Chong
 #
 # This file is part of WESTPA.
@@ -21,7 +22,8 @@ from westpa.westtools import (
     IterRangeSelection,
     ProgressIndicatorComponent,
 )
-import numpy, h5py
+import numpy
+import h5py
 
 import westpa
 from westpa import h5io

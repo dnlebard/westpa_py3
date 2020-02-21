@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 # Copyright (C) 2017 Matthew C. Zwier and Lillian T. Chong
 #
 # This file is part of WESTPA.
@@ -23,8 +24,7 @@ from westpa.westtools import WESTTool, WESTDataReader, IterRangeSelection
 import westpa
 from westpa.data_manager import weight_dtype, n_iter_dtype, vstr_dtype
 from westpa.we_driver import NewWeightEntry
-from westpa import mclib
-from westpa import h5io
+from westpa import mclib, h5io
 
 fluxentry_dtype = numpy.dtype(
     [("n_iter", n_iter_dtype), ("flux", weight_dtype), ("count", numpy.uint)]

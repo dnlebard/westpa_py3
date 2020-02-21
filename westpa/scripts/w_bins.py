@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 # Copyright (C) 2013 Matthew C. Zwier and Lillian T. Chong
 #
 # This file is part of WESTPA.
@@ -15,8 +16,8 @@
 # You should have received a copy of the GNU General Public License
 # along with WESTPA.  If not, see <http://www.gnu.org/licenses/>.
 
-
-import logging, sys
+import sys
+import logging
 import numpy
 
 from westpa.westtools import WESTTool, WESTDataReader, BinMappingComponent

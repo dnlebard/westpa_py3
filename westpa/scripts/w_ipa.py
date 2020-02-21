@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 # Copyright (C) 2017 Matthew C. Zwier and Lillian T. Chong
 #
 # This file is part of WESTPA.
@@ -15,44 +16,39 @@
 # You should have received a copy of the GNU General Public License
 # along with WESTPA.  If not, see <http://www.gnu.org/licenses/>.
 
+import os
 import warnings
 
-warnings.filterwarnings("ignore", category=DeprecationWarning)
-warnings.filterwarnings("ignore", category=RuntimeWarning)
-warnings.filterwarnings("ignore", category=FutureWarning)
-warnings.filterwarnings("ignore", category=ImportWarning)
+import hashlib
+
 import numpy as np
-import h5py
 import codecs
 import base64
 
 # Must be run with the WEST wrapper.
 from westpa import h5io
-from westpa.h5io import WESTPAH5File
-from westpa.extloader import get_object
 import westpa
-import os, sys
-import w_assign, w_direct, w_reweight
-
-warnings.filterwarnings("ignore")
-import scipy.sparse as sp
-import hashlib
-import json
-
-# sys.tracebacklimit = 5
+import w_assign
+import w_direct
+import w_reweight
 
 from westpa.westtools import (
-    WESTSubcommand,
     WESTParallelTool,
     WESTDataReader,
-    WESTDSSynthesizer,
-    BinMappingComponent,
     ProgressIndicatorComponent,
-    IterRangeSelection,
     Plotter,
 )
 
 from westpa.westtools import WIPIDataset, __get_data_for_iteration__, WIPIScheme
+
+warnings.filterwarnings("ignore")
+
+warnings.filterwarnings("ignore", category=DeprecationWarning)
+warnings.filterwarnings("ignore", category=RuntimeWarning)
+warnings.filterwarnings("ignore", category=FutureWarning)
+warnings.filterwarnings("ignore", category=ImportWarning)
+
+# sys.tracebacklimit = 5
 
 
 class WIPI(WESTParallelTool):

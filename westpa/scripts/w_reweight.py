@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 # Copyright (C) 2017 Matthew C. Zwier and Lillian T. Chong
 #
 # This file is part of WESTPA.
@@ -20,25 +21,12 @@ import logging
 # Let's suppress those numpy warnings.
 import warnings
 
-warnings.filterwarnings("ignore", category=DeprecationWarning)
-warnings.filterwarnings("ignore", category=RuntimeWarning)
-warnings.filterwarnings("ignore", category=FutureWarning)
-
 import numpy as np
-import scipy.sparse as sp
-import h5py
-
-import westpa
-from westpa.data_manager import weight_dtype, n_iter_dtype
 
 # from westpa.westtools import (WESTTool, WESTParallelTool, WESTDataReader, IterRangeSelection,
 from westpa.westtools import (
     WESTMasterCommand,
     WESTParallelTool,
-    WESTDataReader,
-    IterRangeSelection,
-    WESTSubcommand,
-    ProgressIndicatorComponent,
 )
 
 from westpa.westtools.kinetics_tool import (
@@ -47,15 +35,16 @@ from westpa.westtools.kinetics_tool import (
     generate_future,
 )
 from westpa import h5io
-from westpa.westtools.dtypes import iter_block_ci_dtype as ci_dtype
-from westpa import mclib
 
 
-from westpa.mclib import mcbs_correltime, mcbs_ci_correl
+from westpa.mclib import mcbs_ci_correl
 
 # From postanalysis matrix
-from westpa.binning import index_dtype
-from westpa.reweight import stats_process, reweight_for_c, FluxMatrix
+from westpa.reweight import reweight_for_c, FluxMatrix
+
+warnings.filterwarnings("ignore", category=DeprecationWarning)
+warnings.filterwarnings("ignore", category=RuntimeWarning)
+warnings.filterwarnings("ignore", category=FutureWarning)
 
 log = logging.getLogger("westtools.w_reweight")
 

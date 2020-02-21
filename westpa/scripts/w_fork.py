@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 # Copyright (C) 2013 Matthew C. Zwier and Lillian T. Chong
 #
 # This file is part of WESTPA.
@@ -16,7 +17,8 @@
 # along with WESTPA.  If not, see <http://www.gnu.org/licenses/>.
 
 
-import os, sys, logging, argparse
+import logging
+import argparse
 import numpy
 
 import westpa

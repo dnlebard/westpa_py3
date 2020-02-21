@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 # Copyright (C) 2013 Matthew C. Zwier, Nick Rego, and Lillian T. Chong
 #
 # This file is part of WESTPA.
@@ -15,11 +16,9 @@
 # You should have received a copy of the GNU General Public License
 # along with WESTPA.  If not, see <http://www.gnu.org/licenses/>.
 
-import sys
 import logging
 import math
 from numpy import index_exp
-import h5py
 
 from westpa.data_manager import seg_id_dtype, weight_dtype
 from westpa.binning import index_dtype, assign_and_label, accumulate_labeled_populations
@@ -28,7 +27,6 @@ from westpa.westtools import (
     WESTDataReader,
     WESTDSSynthesizer,
     BinMappingComponent,
-    mapper_from_dict,
     ProgressIndicatorComponent,
 )
 import numpy
