@@ -29,13 +29,15 @@ except ImportError:
     # fall back on Python implementation
     from yaml import Loader as YLoader
 
-import os, warnings
-from . import extloader
+import os
+import warnings
+
 
 # Only needed for temporary class
 import numpy
 import westpa
 from westpa.binning import NopMapper
+from westpa import extloader
 
 NotProvided = object()
 
