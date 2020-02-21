@@ -16,6 +16,7 @@
 # along with WESTPA.  If not, see <http://www.gnu.org/licenses/>.
 import glob
 from distutils.core import setup
+from setuptools import find_packages
 from distutils.extension import Extension
 
 import numpy
@@ -36,9 +37,9 @@ finally:
 suffix = "pyx" if use_cython else "c"
 
 setup(
-    name="WESTPA",
-    packages=["westpa"],
-    version="0.0.1",
+    name="westpa",
+    packages=find_packages(),
+    version="0.0.2",
     cmdclass=cmdclass,
     scripts=glob.glob("westpa/scripts/*.py"),
     install_requires=["blessings", "h5py", "pyyaml", "scipy", "matplotlib"],
