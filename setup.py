@@ -1,7 +1,7 @@
-import glob
+import numpy
+
 from setuptools import setup, find_packages
 from setuptools.extension import Extension
-import numpy
 
 
 numpy_include = numpy.get_include()
@@ -19,14 +19,41 @@ finally:
 
 suffix = "pyx" if use_cython else "c"
 
-scripts = glob.glob("westpa/scripts/*.py")
+entry_points = [
+    "w_direct = westpa.commands.w_direct:main",
+    "w_dumpsegs = westpa.commands.w_dumpsegs:main",
+    "w_postanalysis_matrix = westpa.commands.w_postanalysis_matrix:main",
+    "w_fork = westpa.commands.w_fork:main",
+    "w_select = westpa.commands.w_select:main",
+    "ploterr = westpa.commands.ploterr:main",
+    "w_states = westpa.commands.w_states:main",
+    "w_run = westpa.commands.w_run:main",
+    "w_nto = westpa.commands.w_nto:main",
+    "w_kinavg = westpa.commands.w_kinavg:main",
+    "w_eddist = westpa.commands.w_eddist:main",
+    "w_assign = westpa.commands.w_assign:main",
+    "w_trace = westpa.commands.w_trace:main",
+    "w_truncate = westpa.commands.w_truncate:main",
+    "w_crawl = westpa.commands.w_crawl:main",
+    "w_init = westpa.commands.w_init:main",
+    "plothist = westpa.commands.plothist:main",
+    "w_kinetics = westpa.commands.w_kinetics:main",
+    "w_fluxanl = westpa.commands.w_fluxanl:main",
+    "w_reweight = westpa.commands.w_reweight:main",
+    "w_pdist = westpa.commands.w_pdist:main",
+    "w_ipa = westpa.commands.w_ipa:main",
+    "w_bins = westpa.commands.w_bins:main",
+    "w_succ = westpa.commands.w_succ:main",
+    "w_stateprobs = westpa.commands.w_stateprobs:main",
+    "w_postanalysis_reweight = westpa.commands.w_postanalysis_reweight:main",
+]
 
 setup(
     name="westpa",
     packages=find_packages(),
     version="0.0.5",
     cmdclass=cmdclass,
-    scripts=scripts,
+    entry_points={"console_scripts": entry_points},
     install_requires=["blessings", "h5py", "pyyaml", "scipy", "matplotlib"],
     ext_modules=[
         Extension(

@@ -1,11 +1,7 @@
-import nose
-import nose.tools
-from nose.tools import with_setup
-from nose.plugins.skip import SkipTest
-
-from .common import *
-from w_trace import WTraceTool
 import h5py
+
+from westpa.tests.common import CommonToolTest
+from westpa.commands.w_trace import WTraceTool
 
 
 class Test_W_Trace_Args(CommonToolTest):

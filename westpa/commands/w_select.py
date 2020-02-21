@@ -1,15 +1,16 @@
-from westpa.westtools import (
-    WESTParallelTool,
-    WESTDataReader,
-    IterRangeSelection,
-    ProgressIndicatorComponent,
-)
+#!/usr/bin/env python
 
 import numpy
 
 from westpa import h5io
 from westpa.data_manager import seg_id_dtype, n_iter_dtype, weight_dtype
 from westpa.extloader import get_object
+from westpa.westtools import (
+    WESTParallelTool,
+    WESTDataReader,
+    IterRangeSelection,
+    ProgressIndicatorComponent,
+)
 
 
 def _find_matching_segments(west_datafile_name, n_iter, predicate, invert=False):
@@ -82,7 +83,7 @@ Command-line arguments
 """
 
     def __init__(self):
-        super(WSelectTool, self).__init__()
+        super().__init__()
 
         self.data_reader = WESTDataReader()
         self.iter_range = IterRangeSelection()
@@ -262,5 +263,9 @@ Command-line arguments
                     pi.progress += 1
 
 
-if __name__ == "__main__":
+def main():
     WSelectTool().main()
+
+
+if __name__ == "__main__":
+    main()

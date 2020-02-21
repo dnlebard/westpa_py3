@@ -1,31 +1,34 @@
+#!/usr/bin/env python
+import os
 import warnings
+
+import hashlib
 
 import numpy as np
 import codecs
 import base64
 
+import westpa
+
 # Must be run with the WEST wrapper.
 from westpa import h5io
-import westpa
-import os
-import w_assign
-import w_direct
-import w_reweight
 
-import hashlib
-
-# sys.tracebacklimit = 5
+from westpa.commands import w_assign
+from westpa.commands import w_direct
+from westpa.commands import w_reweight
 
 from westpa.westtools import (
     WESTParallelTool,
     WESTDataReader,
     ProgressIndicatorComponent,
     Plotter,
+    WIPIDataset,
+    __get_data_for_iteration__,
+    WIPIScheme,
 )
 
-from westpa.westtools import WIPIDataset, __get_data_for_iteration__, WIPIScheme
-
 warnings.filterwarnings("ignore")
+
 warnings.filterwarnings("ignore", category=DeprecationWarning)
 warnings.filterwarnings("ignore", category=RuntimeWarning)
 warnings.filterwarnings("ignore", category=FutureWarning)
@@ -72,11 +75,10 @@ class WIPI(WESTParallelTool):
         Run help on any function or property for more information!
 
         Happy analyzing!
-                
     """
 
     def __init__(self):
-        super(WIPI, self).__init__()
+        super().__init__()
         self.data_reader = WESTDataReader()
         self.wm_env.default_work_manager = self.wm_env.default_parallel_work_manager
         self.progress = ProgressIndicatorComponent()
@@ -203,9 +205,9 @@ class WIPI(WESTParallelTool):
 
     def analysis_structure(self):
         """
-        Run automatically on startup.  Parses through the configuration file, and loads up all the data files from the different 
-        analysis schematics.  If they don't exist, it creates them automatically by hooking in to existing analysis routines 
-        and going from there.  
+        Run automatically on startup.  Parses through the configuration file, and loads up all the data files from the different
+        analysis schematics.  If they don't exist, it creates them automatically by hooking in to existing analysis routines
+        and going from there.
 
         It does this by calling in the make_parser_and_process function for w_{assign,reweight,direct} using a custom built list
         of args.  The user can specify everything in the configuration file that would have been specified on the command line.
@@ -900,7 +902,7 @@ class WIPI(WESTParallelTool):
         Call as a dictionary item or a .attribute:
 
         w.past, w.current, w.future:
-            
+
             {current}
 
         Raw schemes can be accessed as follows:
@@ -970,14 +972,14 @@ class WIPI(WESTParallelTool):
         return sorted(set(return_list))
 
 
-west = WIPI()
-w = west
-if __name__ == "__main__":
+def main():
+    west = WIPI()
+    w = west
     # We're gonna print some defaults.
     w.main()
     if not w.analysis_mode:
-        from IPython import embed, embed_kernel
-        from IPython.lib.kernel import find_connection_file
+        from IPython import embed, embed_kernel  # noqa
+        from IPython.lib.kernel import find_connection_file  # noqa
         import IPython
 
         # We're using this to set magic commands.
@@ -991,3 +993,7 @@ if __name__ == "__main__":
         c.IPCompleter.greedy = True
         embed(banner1="", exit_msg="Leaving w_ipa... goodbye.", config=c)
     print("")
+
+
+if __name__ == "__main__":
+    main()

@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 import logging
 
 # Let's suppress those numpy warnings.
@@ -264,7 +265,7 @@ class RWReweight(AverageCommands):
         self.obs_threshold = args.obs_threshold
 
     def accumulate_statistics(self, start_iter, stop_iter):
-        """ 
+        """
         This function pulls previously generated flux matrix data into memory.
         The data is assumed to exist within an HDF5 file that is available
         as a property.
@@ -301,7 +302,7 @@ class RWReweight(AverageCommands):
         self.insert = np.array(insert, dtype=np.intc)
 
     def generate_reweight_data(self):
-        """ 
+        """
         This function ensures all the appropriate files are loaded, sets
         appropriate attributes necessary for all calling functions/children,
         and then calls the function to load in the flux matrix data.
@@ -365,7 +366,7 @@ dataset:
   /avg_total_fluxes [state]
     (Structured -- see below) Total fluxes into each state based on entire
     window of iterations selected.
-    
+
   /avg_conditional_fluxes [state,state]
     (Structured -- see below) State-to-state fluxes based on entire window of
     iterations selected.
@@ -381,31 +382,31 @@ available:
     element. If --evolution-mode=blocked, then these windows are all of
     width --step-iter (excluding the last, which may be shorter), the first
     of which begins at iteration --start-iter.
-    
+
   /target_flux_evolution [window,state]
     (Structured -- see below). Total flux into a given macro state based on
     windows of iterations of varying width, as in /rate_evolution.
-    
+
   /conditional_flux_evolution [window,state,state]
     (Structured -- see below). State-to-state fluxes based on windows of
     varying width, as in /rate_evolution.
-    
+
 The structure of these datasets is as follows:
 
   iter_start
     (Integer) Iteration at which the averaging window begins (inclusive).
-    
+
   iter_stop
     (Integer) Iteration at which the averaging window ends (exclusive).
-    
+
   expected
     (Floating-point) Expected (mean) value of the observable as evaluated within
     this window, in units of inverse tau.
-    
+
   ci_lbound
     (Floating-point) Lower bound of the confidence interval of the observable
     within this window, in units of inverse tau.
-    
+
   ci_ubound
     (Floating-point) Upper bound of the confidence interval of the observable
     within this window, in units of inverse tau.
@@ -413,7 +414,7 @@ The structure of these datasets is as follows:
   stderr
     (Floating-point) The standard error of the mean of the observable
     within this window, in units of inverse tau.
-    
+
   corr_len
     (Integer) Correlation length of the observable within this window, in units
     of tau.
@@ -427,10 +428,10 @@ Each of these datasets is also stamped with a number of attributes:
   mcbs_nsets
     (Integer) Number of bootstrap data sets used in generating confidence
     intervals.
-    
+
   mcbs_acalpha
     (Floating-point) Alpha value for determining correlation lengths.
-   
+
 
 -----------------------------------------------------------------------------
 Command-line options
@@ -438,12 +439,12 @@ Command-line options
     """
 
     def __init__(self, parent):
-        super(RWRate, self).__init__(parent)
+        super().__init__(parent)
         self.parent = parent
         self.assignments_file = None
 
     def w_postanalysis_reweight(self):
-        """ 
+        """
         This function ensures the data is ready to send in to the estimator and
         the bootstrapping routine, then does so. Much of this is simply setting 
         up appropriate args and kwargs, then passing them in to the 
@@ -572,9 +573,9 @@ class RWStateProbs(RWReweight):
     default_kinetics_file = "reweight.h5"
     description = """\
 Calculate average populations from weighted ensemble data using the postanalysis
-reweighting scheme. Bin assignments (usually "assign.h5") and pre-calculated 
-iteration flux matrices (usually "reweight.h5") data files must have been 
-previously generated using w_reweight matrix (see "w_assign --help" and 
+reweighting scheme. Bin assignments (usually "assign.h5") and pre-calculated
+iteration flux matrices (usually "reweight.h5") data files must have been
+previously generated using w_reweight matrix (see "w_assign --help" and
 "w_reweight init --help" for information on generating these files).
 
 -----------------------------------------------------------------------------
@@ -599,7 +600,7 @@ available:
     (Structured -- see below). State populations based on windows of
     iterations of varying width.  If --evolution-mode=cumulative, then
     these windows all begin at the iteration specified with
-    --start-iter and grow in length by --step-iter for each successive 
+    --start-iter and grow in length by --step-iter for each successive
     element. If --evolution-mode=blocked, then these windows are all of
     width --step-iter (excluding the last, which may be shorter), the first
     of which begins at iteration --start-iter.
@@ -608,27 +609,27 @@ available:
     (Structured -- see below). Ensemble populations based on windows of
     iterations of varying width.  If --evolution-mode=cumulative, then
     these windows all begin at the iteration specified with
-    --start-iter and grow in length by --step-iter for each successive 
+    --start-iter and grow in length by --step-iter for each successive
     element. If --evolution-mode=blocked, then these windows are all of
     width --step-iter (excluding the last, which may be shorter), the first
     of which begins at iteration --start-iter.
-    
+
 The structure of these datasets is as follows:
 
   iter_start
     (Integer) Iteration at which the averaging window begins (inclusive).
-    
+
   iter_stop
     (Integer) Iteration at which the averaging window ends (exclusive).
-    
+
   expected
     (Floating-point) Expected (mean) value of the observable as evaluated within
     this window, in units of inverse tau.
-    
+
   ci_lbound
     (Floating-point) Lower bound of the confidence interval of the observable
     within this window, in units of inverse tau.
-    
+
   ci_ubound
     (Floating-point) Upper bound of the confidence interval of the observable
     within this window, in units of inverse tau.
@@ -636,7 +637,7 @@ The structure of these datasets is as follows:
   stderr
     (Floating-point) The standard error of the mean of the observable
     within this window, in units of inverse tau.
-    
+
   corr_len
     (Integer) Correlation length of the observable within this window, in units
     of tau.
@@ -645,16 +646,16 @@ The structure of these datasets is as follows:
 Each of these datasets is also stamped with a number of attributes:
 
   mcbs_alpha
-    (Floating-point) Alpha value of confidence intervals. (For example, 
+    (Floating-point) Alpha value of confidence intervals. (For example,
     *alpha=0.05* corresponds to a 95% confidence interval.)
 
   mcbs_nsets
     (Integer) Number of bootstrap data sets used in generating confidence
     intervals.
-    
+
   mcbs_acalpha
     (Floating-point) Alpha value for determining correlation lengths.
-   
+
 
 -----------------------------------------------------------------------------
 Command-line options
@@ -662,14 +663,14 @@ Command-line options
 """
 
     def w_postanalysis_stateprobs(self):
-        """ 
+        """
         This function ensures the data is ready to send in to the estimator and
-        the bootstrapping routine, then does so. Much of this is simply setting 
-        up appropriate args and kwargs, then passing them in to the 
+        the bootstrapping routine, then does so. Much of this is simply setting
+        up appropriate args and kwargs, then passing them in to the
         'run_calculation' function, which sets up future objects to send to the
-        work manager. The results are returned, and then written to the 
+        work manager. The results are returned, and then written to the
         appropriate HDF5 dataset.
-        This function is specific for the color (steady-state) and macrostate 
+        This function is specific for the color (steady-state) and macrostate
         probabilities from the reweighting method.
         """
         self.generate_reweight_data()
@@ -913,5 +914,9 @@ class WReweight(WESTMasterCommand, WESTParallelTool):
     subparsers_title = "reweighting kinetics analysis scheme"
 
 
-if __name__ == "__main__":
+def main():
     WReweight().main()
+
+
+if __name__ == "__main__":
+    main()

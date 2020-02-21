@@ -1,5 +1,5 @@
+#!/usr/bin/env python
 import argparse
-
 import logging
 
 import westpa
@@ -7,7 +7,7 @@ import westpa
 log = logging.getLogger("w_truncate")
 
 
-if __name__ == "__main__":
+def main():
     warning_string = """\
 NOTE: w_truncate only deletes iteration groups from the HDF5 data store.
 It is recommended that any iteration data saved to the file system (e.g. in the
@@ -47,3 +47,7 @@ traj_segs directory) is deleted or moved for the corresponding iterations.
 
     dm.flush_backing()
     dm.close_backing()
+
+
+if __name__ == "__main__":
+    main()

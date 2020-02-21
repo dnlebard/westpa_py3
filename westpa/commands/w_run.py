@@ -1,14 +1,16 @@
+#!/usr/bin/env python
+
 import logging
 import argparse
 import traceback
 
-from westpa import rc
-from westpa import work_managers
-from westpa.work_managers import make_work_manager
+from westpa import rc, work_managers
+from westpa.work_managers.environment import make_work_manager
 
 log = logging.getLogger("w_run")
 
-if __name__ == "__main__":
+
+def main():
     parser = argparse.ArgumentParser("w_run", "start/continue a WEST simulation")
     rc.add_args(parser)
     parser.add_argument(
@@ -62,3 +64,7 @@ if __name__ == "__main__":
                 log.error(traceback.format_exc())
         else:
             work_manager.run()
+
+
+if __name__ == "__main__":
+    main()

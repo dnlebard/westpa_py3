@@ -1,11 +1,11 @@
+#!/usr/bin/env python
 import sys
-
 from westpa.westtools import (
     WESTMasterCommand,
     WESTParallelTool,
 )
 
-from westpa.scripts.w_direct import DKinetics
+from westpa.commands.w_direct import DKinetics
 
 # Just a shim to make sure everything works and is backwards compatible.
 
@@ -84,7 +84,7 @@ Command-line options
 """
 
 
-if __name__ == "__main__":
+def main():
     print(
         "WARNING: {} is being deprecated.  Please use w_direct instead.".format(
             WDirect.prog
@@ -97,3 +97,7 @@ if __name__ == "__main__":
     except Exception:
         sys.argv.insert(1, "trace")
     WDirect().main()
+
+
+if __name__ == "__main__":
+    main()

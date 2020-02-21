@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 from westpa.westtools import (
     WESTTool,
     WESTDataReader,
@@ -227,5 +228,9 @@ Command-line arguments
                 pi.progress += 1
 
 
-if __name__ == "__main__":
+def main():
     WNTopTool().main()
+
+
+if __name__ == "__main__":
+    main()

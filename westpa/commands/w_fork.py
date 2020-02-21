@@ -1,4 +1,6 @@
-import os, sys, logging, argparse
+#!/usr/bin/env python
+import logging
+import argparse
 import numpy
 
 import westpa
@@ -8,7 +10,8 @@ from westpa.data_manager import n_iter_dtype, seg_id_dtype
 
 log = logging.getLogger("w_fork")
 
-if __name__ == "__main__":
+
+def main():
     parser = argparse.ArgumentParser(
         "w_fork",
         description="""\
@@ -157,3 +160,7 @@ if __name__ == "__main__":
                 new_istate_id=int(row["new_istate_id"]),
             )
         )
+
+
+if __name__ == "__main__":
+    main()

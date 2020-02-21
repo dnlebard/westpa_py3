@@ -1,12 +1,10 @@
-import nose
-import nose.tools
-from nose.tools import with_setup
+import math
+import h5py
+
 from nose.plugins.skip import SkipTest
 
-import tempfile, math
-from .common import *
-from w_fluxanl import WFluxanlTool
-import h5py
+from westpa.tests.common import CommonToolTest, cycle_args, make_args
+from westpa.commands.w_fluxanl import WFluxanlTool
 
 
 def get_flux_group(f):

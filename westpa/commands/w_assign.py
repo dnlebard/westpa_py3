@@ -1,8 +1,8 @@
-import sys
+#!/usr/bin/env python
 import logging
 import math
+import numpy
 from numpy import index_exp
-import h5py
 
 from westpa.data_manager import seg_id_dtype, weight_dtype
 from westpa.binning import index_dtype, assign_and_label, accumulate_labeled_populations
@@ -11,16 +11,15 @@ from westpa.westtools import (
     WESTDataReader,
     WESTDSSynthesizer,
     BinMappingComponent,
-    mapper_from_dict,
     ProgressIndicatorComponent,
 )
-import numpy
 import westpa
 from westpa import h5io
 from westpa.h5io import WESTPAH5File
 from westpa.extloader import get_object
 
 log = logging.getLogger("westtools.w_assign")
+
 
 # Changes to keep it alive...
 def parse_pcoord_value(pc_str):
@@ -120,7 +119,7 @@ recently in at each timepoint, for use in subsequent kinetic analysis.
 This is required for all kinetics analysis (w_kintrace and w_kinmat).
 
 There are three ways to specify macrostates:
-  
+
   1. States corresponding to single bins may be identified on the command
      line using the --states option, which takes multiple arguments, one for
      each state (separated by spaces in most shells). Each state is specified
@@ -128,7 +127,7 @@ There are three ways to specify macrostates:
      ``bound:1.0`` or ``unbound:(2.5,2.5)``. Unlabeled states are named
      ``stateN``, where N is the (zero-based) position in the list of states
      supplied to --states.
-     
+
   2. States corresponding to multiple bins may use a YAML input file specified
      with --states-from-file. This file defines a list of states, each with a
      name and a list of coordinate tuples; bins containing these coordinates
@@ -149,7 +148,7 @@ There are three ways to specify macrostates:
      consists of bins containing the (2-dimensional) progress coordinate
      values (9.0, 1.0) and (9.0, 2.0); the second state is called "bound"
      and consists of the single bin containing the point (0.1, 0.0).
-     
+
   3. Arbitrary state definitions may be supplied by a user-defined function,
      specified as --states-from-function=MODULE.FUNCTION. This function is
      called with the bin mapper as an argument (``function(mapper)``) and must
@@ -204,9 +203,9 @@ present:
 
   ``/state_map`` [bin]
     *(Integer)* Mapping of bin index to the macrostate containing that bin.
-    An entry will contain *nbins+1* if that bin does not fall into a 
+    An entry will contain *nbins+1* if that bin does not fall into a
     macrostate.
-    
+
 Datasets indexed by state and bin contain one more entry than the number of
 valid states or bins. For *N* bins, axes indexed by bin are of size *N+1*, and
 entry *N* (0-based indexing) corresponds to a walker outside of the defined bin
@@ -216,11 +215,11 @@ indexed by state are of size *M+1* and entry *M* refers to trajectories
 initiated in a region not corresponding to a defined macrostate.
 
 Thus, ``labeled_populations[:,:,:].sum(axis=1)[:,:-1]`` gives overall per-bin
-populations, for all defined bins and 
+populations, for all defined bins and
 ``labeled_populations[:,:,:].sum(axis=2)[:,:-1]`` gives overall
-per-trajectory-ensemble populations for all defined states. 
+per-trajectory-ensemble populations for all defined states.
 
-    
+
 -----------------------------------------------------------------------------
 Parallelization
 -----------------------------------------------------------------------------
@@ -235,7 +234,7 @@ Command-line options
 """
 
     def __init__(self):
-        super(WAssign, self).__init__()
+        super().__init__()
 
         # Parallel processing by default (this is not actually necessary, but it is
         # informative!)
@@ -323,7 +322,7 @@ Command-line options
         with self.data_reader:
             self.dssynth.h5filename = self.data_reader.we_h5filename
             self.dssynth.process_args(args)
-            if args.config_from_file == False:
+            if not args.config_from_file:
                 self.binning.set_we_h5file_info(self.n_iter, self.data_reader)
                 self.binning.process_args(args)
 
@@ -366,13 +365,13 @@ Command-line options
     def load_config_from_west(self, scheme):
         try:
             config = westpa.rc.config["west"]["analysis"]
-        except:
+        except Exception:
             raise ValueError("There is no configuration file specified.")
         ystates = config["analysis_schemes"][scheme]["states"]
         self.states_from_dict(ystates)
         try:
             self.subsample = config["subsample"]
-        except:
+        except Exception:
             pass
         from westpa._rc import bins_from_yaml_dict
 
@@ -385,7 +384,7 @@ Command-line options
         try:
             os.mkdir(config["directory"])
             os.mkdir(path)
-        except:
+        except Exception:
             pass
 
         self.output_filename = os.path.join(path, "assign.h5")
@@ -646,7 +645,7 @@ Command-line options
                     n_iter, nstates, nbins, state_map, last_labels
                 )
 
-                ##Do stuff with this iteration's results
+                # Do stuff with this iteration's results
 
                 last_labels = trajlabels[:, -1].copy()
                 assignments_ds[iiter, 0 : nsegs[iiter], 0 : npts[iiter]] = assignments
@@ -670,5 +669,9 @@ Command-line options
                 h5io.stamp_iter_range(self.output_file[dsname], iter_start, iter_stop)
 
 
-if __name__ == "__main__":
+def main():
     WAssign().main()
+
+
+if __name__ == "__main__":
+    main()

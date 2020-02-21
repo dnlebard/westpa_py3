@@ -1,12 +1,17 @@
+#!/usr/bin/env python
+import re
+import os
+
 import logging
-import re, os
+import numpy
+import h5py
+
 from westpa.westtools import (
     WESTMasterCommand,
     WESTSubcommand,
     ProgressIndicatorComponent,
     Plotter,
 )
-import numpy, h5py
 from westpa import h5io
 
 if os.environ.get("DISPLAY") is not None:
@@ -18,7 +23,7 @@ log = logging.getLogger("westtools.ploterrs")
 
 class CommonPloterrs(WESTSubcommand):
     def __init__(self, parent):
-        super(CommonPloterrs, self).__init__(parent)
+        super().__init__(parent)
 
         self.progress = ProgressIndicatorComponent()
 
@@ -172,7 +177,7 @@ Command-line arguments
     help_text = "arbitrary HDF5 file and dataset"
 
     def __init__(self, parent):
-        super(GenericIntervalSubcommand, self).__init__(parent)
+        super().__init__(parent)
         self.h5file = None
         self.h5dset = None
         self.dset_slice = None
@@ -189,7 +194,7 @@ Command-line arguments
         )
         iogroup.add_argument(
             "dsspec",
-            help="""Use data located at DSSPEC, which must be formatted as 
+            help="""Use data located at DSSPEC, which must be formatted as
                              FILENAME/PATH[SLICE]. FILENAME is the HDF5 file to read, PATH is the
                              HDF5 path to the dataset, and SLICE, if provided, must be the Numpy-style
                              slice (including brackets) which selects a vector of data of the
@@ -241,9 +246,9 @@ class DirectKinetics(CommonPloterrs):
     rate_output_filename = "rate_evolution_d_{istate_label}_{fstate_label}.pdf"
     description = """\
 Plot evolution of state-to-state rates and total flux into states as generated
-by ``w_{direct/reweight} kinetics`` (when used with the ``--evolution-mode`` 
-option). Plots are generated for all rates/fluxes calculated. Output filenames 
-require (and plot titles and axis labels support) substitution based on which 
+by ``w_{direct/reweight} kinetics`` (when used with the ``--evolution-mode``
+option). Plots are generated for all rates/fluxes calculated. Output filenames
+require (and plot titles and axis labels support) substitution based on which
 flux/rate is being plotted:
 
   istate_label, fstate_label
@@ -252,16 +257,16 @@ flux/rate is being plotted:
 
   istate_index, fstate_index
     *(Integer, for rates)* Indices of initial and final states.
-    
+
   state_label
     *(String, for fluxes)* Name of state
-    
+
   state_index
     *(Integer, for fluxes)* Index of state
 """
 
     def __init__(self, parent):
-        super(DirectKinetics, self).__init__(parent)
+        super().__init__(parent)
         self.kinavg_file = None
 
         self.dset_slice = None
@@ -418,13 +423,13 @@ plotted:
 
   state_label
     *(String, for fluxes)* Name of state
-    
+
   state_index
     *(Integer, for fluxes)* Index of state
 """
 
     def __init__(self, parent):
-        super(DirectStateprobs, self).__init__(parent)
+        super().__init__(parent)
         self.stateprobs_file = None
 
         self.dset_slice = None
@@ -583,7 +588,7 @@ class PloterrsTool(WESTMasterCommand):
     ]
     subparsers_title = "supported input formats"
     description = """\
-Plots error ranges for weighted ensemble datasets. 
+Plots error ranges for weighted ensemble datasets.
 
 
 -----------------------------------------------------------------------------
@@ -592,5 +597,9 @@ Command-line options
 """
 
 
-if __name__ == "__main__":
+def main():
     PloterrsTool().main()
+
+
+if __name__ == "__main__":
+    main()

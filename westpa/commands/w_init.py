@@ -1,22 +1,21 @@
-import sys
+#!/usr/bin/env python
 import logging
 import numpy
 import argparse
 import io
 
 from westpa import work_managers
-from westpa.work_managers import make_work_manager
+from westpa.work_managers.environment import make_work_manager
 
 import westpa
-from westpa.states import TargetState
+from westpa.states import TargetState, BasisState
 
 log = logging.getLogger("w_init")
 
-log = logging.getLogger("w_init")
 EPS = numpy.finfo(numpy.float64).eps
 
-if __name__ == "__main__":
 
+def main():
     parser = argparse.ArgumentParser(
         "w_init",
         description="""\
@@ -30,7 +29,7 @@ if __name__ == "__main__":
 
     Target states for (non-equilibrium) steady-state simulations are specified either in a file specified with --tstates-from, or
     by one or more --tstate arguments. If neither --tstates-from nor at least one --tstate argument is provided, then an equilibrium
-    simulation (without any sinks) will be performed. 
+    simulation (without any sinks) will be performed.
     """,
     )
     westpa.rc.add_args(parser)
@@ -93,12 +92,12 @@ if __name__ == "__main__":
 
     system = westpa.rc.get_system_driver()
     sim_manager = westpa.rc.get_sim_manager()
-    propagator = westpa.rc.get_propagator()
+    westpa.rc.get_propagator()
     data_manager = westpa.rc.get_data_manager()
-    h5file = data_manager.we_h5filename
+    data_manager.we_h5filename
 
     data_manager.system = system
-    we_driver = westpa.rc.get_we_driver()
+    westpa.rc.get_we_driver()
     basis_states = args.bstates
 
     with work_manager:
@@ -115,9 +114,21 @@ if __name__ == "__main__":
                     TargetState.states_from_file(tstates_strio, system.pcoord_dtype)
                 )
 
-            if not args.basis_states:
-                log.error("At least one basis state is required")
-                sys.exit(3)
+            basis_states = []
+            if args.bstate_file:
+                basis_states.extend(BasisState.states_from_file(args.bstate_file))
+            if args.bstates:
+                for bstate_str in args.bstates:
+                    fields = bstate_str.split(",")
+                    label = fields[0]
+                    probability = float(fields[1])
+                    try:
+                        auxref = fields[2]
+                    except IndexError:
+                        auxref = None
+                    basis_states.append(
+                        BasisState(label=label, probability=probability, auxref=auxref)
+                    )
 
             # Check that the total probability of basis states adds to one
             tprob = sum(bstate.probability for bstate in basis_states)
@@ -128,7 +139,7 @@ if __name__ == "__main__":
                         pscale
                     )
                 )
-                for bstate in args.basis_states:
+                for bstate in basis_states:
                     bstate.probability *= pscale
 
             # Prepare simulation
@@ -140,3 +151,7 @@ if __name__ == "__main__":
             )
         else:
             work_manager.run()
+
+
+if __name__ == "__main__":
+    main()

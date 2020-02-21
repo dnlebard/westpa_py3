@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 import sys
 import logging
 import numpy
@@ -5,7 +6,7 @@ import argparse
 import io
 
 from westpa import work_managers
-from westpa.work_managers import make_work_manager
+from westpa.work_managers.environment import make_work_manager
 
 import westpa
 from westpa.segment import Segment
@@ -15,7 +16,8 @@ log = logging.getLogger("w_init")
 
 EPS = numpy.finfo(numpy.float64).eps
 
-if __name__ == "__main__":
+
+def main():
     parser = argparse.ArgumentParser(
         "w_states",
         description="""\
@@ -241,3 +243,7 @@ if __name__ == "__main__":
                 data_manager.update_iter_group_links(n_iter)
         else:
             work_manager.run()
+
+
+if __name__ == "__main__":
+    main()

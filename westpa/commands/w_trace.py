@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 import re
 from westpa.westtools import WESTTool, WESTDataReader
 import numpy
@@ -156,7 +157,7 @@ class Trace:
         is provided, it must be an iterable (preferably a simple array) of (n_iter,seg_id) pairs,
         and the index in the ``index_data`` iterable of the matching n_iter/seg_id pair is used as
         the index of the data to retrieve.
-        
+
         If an optional ``slice_`` is provided, then the given slicing tuple is appended to that
         used to retrieve the segment-specific data (i.e. it can be used to pluck a subset of the
         data that would otherwise be returned).
@@ -196,18 +197,18 @@ class Trace:
 
     def trace_timepoint_dataset(self, dsname, slice_=None, auxfile=None, index_ds=None):
         """Return a trace along this trajectory over a dataset which is layed out as [seg_id][timepoint][...].
-        Overlapping values at segment boundaries are accounted for.  Returns (data_trace, weight), where 
+        Overlapping values at segment boundaries are accounted for.  Returns (data_trace, weight), where
         data_trace is a time series of the dataset along this trajectory, and weight is the corresponding
         trajectory weight at each time point.
-        
-        If ``auxfile`` is given, then load the dataset from the given HDF5 file, which must be 
+
+        If ``auxfile`` is given, then load the dataset from the given HDF5 file, which must be
         layed out the same way as the main HDF5 file (e.g. iterations arranged as
         iterations/iter_*).
-        
+
         If index_ds is given, instead of reading data per-iteration from iter_* groups, then the
         given index_ds is used as an index of n_iter,seg_id pairs into ``dsname``. In this case,
         the target data set need not exist on a per-iteration basis inside iter_* groups.
-        
+
         If ``slice_`` is given, then *further* slice the data returned from the HDF5 dataset. This can
         minimize I/O if it is known (and specified) that only a subset of the data along the
         trajectory is needed.
@@ -295,7 +296,7 @@ class Trace:
         return tracedata, traceweight
 
     """
-    # This is disabled until there is a real use for it; the following code is 
+    # This is disabled until there is a real use for it; the following code is
     # outdated
     def trace_perseg_dataset(self, dsname):
         '''Return a trace along this trajectory over a dataset which is layed out as [seg_id][...].
@@ -313,13 +314,13 @@ class Trace:
         for isegm1, summary_item in enumerate(self.summary[1:]):
             iseg = isegm1 + 1
             n_iter = summary_item['n_iter']
-            seg_id = summary_item['seg_id']            
+            seg_id = summary_item['seg_id']
             iter_group = self.data_manager.get_iter_group(n_iter)
             seg_data = iter_group[dsname][seg_id]
             tracedata[iseg] = seg_data
             traceweight[iseg] = summary_item['weight']
             del seg_data
-            
+
         return tracedata, traceweight
     """
 
@@ -349,7 +350,7 @@ corresponding to time within the segment.  Further options are specified
 as comma-separated key=value pairs after the data set name, as in
 
     -d dsname,alias=newname,index=idsname,file=otherfile.h5,slice=[100,...]
-    
+
 The following options for datasets are supported:
 
     alias=newname
@@ -364,15 +365,15 @@ The following options for datasets are supported:
         segments, but instead is stored as a single dataset whose
         first dimension indexes n_iter/seg_id pairs. The index to
         these n_iter/seg_id pairs is ``idsname``.
-    
+
     file=otherfile.h5
         Instead of reading data from the main WEST HDF5 file (usually
         ``west.h5``), read data from ``otherfile.h5``.
-        
+
     slice=[100,...]
         Retrieve only the given slice from the dataset. This can be
         used to pick a subset of interest to minimize I/O.
-        
+
 -------------------------------------------------------------------------------
 """
 
@@ -388,7 +389,7 @@ The following options for datasets are supported:
     }
 
     def __init__(self):
-        super(WTraceTool, self).__init__()
+        super().__init__()
 
         self.data_reader = WESTDataReader()
         # self.h5storage = HDF5Storage()
@@ -652,5 +653,9 @@ The following options for datasets are supported:
             )
 
 
-if __name__ == "__main__":
+def main():
     WTraceTool().main()
+
+
+if __name__ == "__main__":
+    main()

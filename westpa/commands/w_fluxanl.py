@@ -1,14 +1,14 @@
+#!/usr/bin/env python
 import numpy
 import h5py
 from scipy.signal import fftconvolve
 
-from westpa.westtools import WESTTool, WESTDataReader, IterRangeSelection
 import westpa
-from westpa.data_manager import weight_dtype, n_iter_dtype, vstr_dtype
-from westpa.we_driver import NewWeightEntry
 from westpa import mclib, h5io
-
+from westpa.we_driver import NewWeightEntry
 from westpa.westtools.dtypes import iter_block_ci_dtype as ci_dtype
+from westpa.westtools import WESTTool, WESTDataReader, IterRangeSelection
+from westpa.data_manager import weight_dtype, n_iter_dtype, vstr_dtype
 
 fluxentry_dtype = numpy.dtype(
     [("n_iter", n_iter_dtype), ("flux", weight_dtype), ("count", numpy.uint)]
@@ -409,5 +409,9 @@ the true value of ``tau``.
             self.calc_evol_flux()
 
 
-if __name__ == "__main__":
+def main():
     WFluxanlTool().main()
+
+
+if __name__ == "__main__":
+    main()

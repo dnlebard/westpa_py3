@@ -3,8 +3,9 @@
 
 import sys, argparse, os
 import westpa
-from westpa import work_managers
 from westpa import h5io
+from westpa import work_managers
+from westpa.work_managers import environment
 
 import logging
 
@@ -129,7 +130,7 @@ class WESTParallelTool(WESTTool):
     def __init__(self, wm_env=None):
         super(WESTTool, self).__init__()
         self.work_manager = None
-        self.wm_env = wm_env or work_managers.environment.default_env
+        self.wm_env = wm_env or environment.default_env
         self.max_queue_len = None
 
     def make_parser_and_process(

@@ -1,11 +1,13 @@
+#!/usr/bin/env python
 import logging
+
+import westpa
 from westpa.westtools import (
     WESTParallelTool,
     WESTDataReader,
     IterRangeSelection,
     ProgressIndicatorComponent,
 )
-import westpa
 from westpa.extloader import get_object
 
 log = logging.getLogger("westtools.w_crawl")
@@ -40,18 +42,18 @@ class WCrawl(WESTParallelTool):
 Crawl a weighted ensemble dataset, executing a function for each iteration.
 This can be used for postprocessing of trajectories, cleanup of datasets,
 or anything else that can be expressed as "do X for iteration N, then do
-something with the result". Tasks are parallelized by iteration, and 
+something with the result". Tasks are parallelized by iteration, and
 no guarantees are made about evaluation order.
 
 
 -----------------------------------------------------------------------------
 Command-line options
 -----------------------------------------------------------------------------
-    
+
 """
 
     def __init__(self):
-        super(WCrawl, self).__init__()
+        super().__init__()
 
         # These are used throughout
         self.progress = ProgressIndicatorComponent()
@@ -120,5 +122,9 @@ Command-line options
                 self.crawler.finalize()
 
 
-if __name__ == "__main__":
+def main():
     WCrawl().main()
+
+
+if __name__ == "__main__":
+    main()

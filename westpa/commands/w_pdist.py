@@ -1,4 +1,7 @@
+#!/usr/bin/env python
 import logging
+import numpy
+import h5py
 
 from westpa.westtools import (
     WESTParallelTool,
@@ -7,8 +10,6 @@ from westpa.westtools import (
     IterRangeSelection,
     ProgressIndicatorComponent,
 )
-import numpy
-import h5py
 from westpa.fasthist import histnd, normhistnd
 from westpa import h5io
 from westpa.h5io import SingleIterDSSpec
@@ -193,7 +194,7 @@ Command-line options
 """
 
     def __init__(self):
-        super(WPDist, self).__init__()
+        super().__init__()
 
         # Parallel processing by default (this is not actually necessary, but it is
         # informative!)
@@ -531,5 +532,9 @@ Command-line options
             del iter_hist, future
 
 
-if __name__ == "__main__":
+def main():
     WPDist().main()
+
+
+if __name__ == "__main__":
+    main()

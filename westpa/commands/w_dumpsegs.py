@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 import sys
 from westpa.westtools import WESTTool, WESTDataReader
 from westpa.segment import Segment
@@ -12,11 +13,11 @@ class WDumpSegs(WESTTool):
     description = """\
 Dump segment data as text. This is very inefficient, so this tool should be used
 as a last resort (use hdfview/h5ls to look at data, and access HDF5 directly for
-significant analysis tasks). 
+significant analysis tasks).
 """
 
     def __init__(self):
-        super(WDumpSegs, self).__init__()
+        super().__init__()
         self.data_reader = WESTDataReader()
         self.n_iter = None
         self.output_file = None
@@ -121,5 +122,9 @@ significant analysis tasks).
                 )
 
 
-if __name__ == "__main__":
+def main():
     WDumpSegs().main()
+
+
+if __name__ == "__main__":
+    main()

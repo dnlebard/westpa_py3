@@ -1,71 +1,59 @@
-from westpa.westtools import WESTMasterCommand, WESTParallelTool
+#!/usr/bin/env python
+import sys
+from westpa.westtools import (
+    WESTMasterCommand,
+    WESTParallelTool,
+)
 
-from westpa.scripts.w_direct import DKinAvg
+from westpa.commands.w_direct import DStateProbs
+
 
 # Just a shim to make sure everything works and is backwards compatible.
+# We're making sure it has the appropriate functions so that it can be called
+# as a regular tool, and not a subcommand.
 
 
-class WKinAvg(DKinAvg):
+class WStateProbs(DStateProbs):
     subcommand = "trace"
     help_text = "averages and CIs for path-tracing kinetics analysis"
-    default_kinetics_file = "kintrace.h5"
-    default_output_file = "kinavg.h5"
+    default_output_file = "stateprobs.h5"
+    # This isn't strictly necessary, but for the moment, here it is.
+    # We really need to modify the underlying class so that we don't pull this sort of stuff if it isn't necessary.
+    # That'll take some case handling, which is fine.
+    default_kinetics_file = "assign.h5"
 
 
 class WDirect(WESTMasterCommand, WESTParallelTool):
-    prog = "w_kinavg"
-    subcommands = [WKinAvg]
-    subparsers_title = "direct kinetics analysis schemes"
+    prog = "w_stateprobs"
+    subcommands = [WStateProbs]
+    subparsers_title = "calculate state-to-state kinetics by tracing trajectories"
     description = """\
-Calculate average rates and associated errors from weighted ensemble data. Bin
-assignments (usually "assignments.h5") and kinetics data (usually
-"kintrace.h5" or "kinmat.h5") data files must have been previously generated
-(see "w_assign --help" and "w_kinetics --help" for information on generating
-these files).
+Calculate average populations and associated errors in state populations from
+weighted ensemble data. Bin assignments, including macrostate definitions,
+are required. (See "w_assign --help" for more information).
 
 -----------------------------------------------------------------------------
 Output format
 -----------------------------------------------------------------------------
 
-The output file (-o/--output, usually "kinavg.h5") contains the following
+The output file (-o/--output, usually "stateprobs.h5") contains the following
 dataset:
 
-  /avg_rates [state,state]
-    (Structured -- see below) State-to-state rates based on entire window of
-    iterations selected.
-
-For trace mode, the following additional datasets are generated:
-
-  /avg_total_fluxes [state]
-    (Structured -- see below) Total fluxes into each state based on entire
-    window of iterations selected.
-    
-  /avg_conditional_fluxes [state,state]
-    (Structured -- see below) State-to-state fluxes based on entire window of
-    iterations selected.
+  /avg_state_pops [state]
+    (Structured -- see below) Population of each state across entire
+    range specified.
 
 If --evolution-mode is specified, then the following additional dataset is
 available:
 
-  /rate_evolution [window][state][state]
-    (Structured -- see below). State-to-state rates based on windows of
+  /state_pop_evolution [window][state]
+    (Structured -- see below). State populations based on windows of
     iterations of varying width.  If --evolution-mode=cumulative, then
     these windows all begin at the iteration specified with
-    --start-iter and grow in length by --step-iter for each successive 
+    --start-iter and grow in length by --step-iter for each successive
     element. If --evolution-mode=blocked, then these windows are all of
     width --step-iter (excluding the last, which may be shorter), the first
     of which begins at iteration --start-iter.
-
-If --evolution-mode is specified in trace mode, the following additional
-datasets are available:
-
-  /target_flux_evolution [window,state]
-    (Structured -- see below). Total flux into a given macro state based on
-    windows of iterations of varying width, as in /rate_evolution.
-
-  /conditional_flux_evolution [window,state,state]
-    (Structured -- see below). State-to-state fluxes based on windows of
-    varying width, as in /rate_evolution.
 
 The structure of these datasets is as follows:
 
@@ -84,7 +72,7 @@ The structure of these datasets is as follows:
     within this window, in units of inverse tau.
 
   ci_ubound
-    (Floating-point) Upper bound of the confidence interval on the rate 
+    (Floating-point) Upper bound of the confidence interval on the rate
     within this window, in units of inverse tau.
 
   corr_len
@@ -94,7 +82,7 @@ The structure of these datasets is as follows:
 Each of these datasets is also stamped with a number of attributes:
 
   mcbs_alpha
-    (Floating-point) Alpha value of confidence intervals. (For example, 
+    (Floating-point) Alpha value of confidence intervals. (For example,
     *alpha=0.05* corresponds to a 95% confidence interval.)
 
   mcbs_nsets
@@ -111,13 +99,13 @@ Command-line options
 """
 
 
-if __name__ == "__main__":
+def main():
     print(
         "WARNING: {} is being deprecated.  Please use w_direct instead.".format(
             WDirect.prog
         )
     )
-    import sys
+    # If we're not really supporting subcommands...
 
     try:
         if sys.argv[1] != "trace":
@@ -125,3 +113,7 @@ if __name__ == "__main__":
     except Exception:
         sys.argv.insert(1, "trace")
     WDirect().main()
+
+
+if __name__ == "__main__":
+    main()

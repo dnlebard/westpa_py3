@@ -1,10 +1,12 @@
+#!/usr/bin/env python
 import sys
+
 from westpa.westtools import (
     WESTMasterCommand,
     WESTParallelTool,
 )
 
-from westpa.scripts.w_reweight import RWAverage
+from westpa.commands.w_reweight import RWAverage
 
 # Just a shim to make sure everything works and is backwards compatible.
 # We're making sure it has the appropriate functions so that it can be called
@@ -39,7 +41,7 @@ Command-line options
 """
 
 
-if __name__ == "__main__":
+def main():
     print(
         "WARNING: {} is being deprecated.  Please use w_reweight instead.".format(
             WReweight.prog
@@ -53,3 +55,7 @@ if __name__ == "__main__":
     except Exception:
         sys.argv.insert(1, "average")
     WReweight().main()
+
+
+if __name__ == "__main__":
+    main()

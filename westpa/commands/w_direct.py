@@ -1,50 +1,30 @@
+#!/usr/bin/env python
 import logging
 
-# Let's suppress those numpy warnings.
-import warnings
-
-# warnings.filterwarnings('ignore', category=DeprecationWarning)
-# warnings.filterwarnings('ignore', category=RuntimeWarning)
-# warnings.filterwarnings('ignore', category=FutureWarning)
-
-import sys
-import random
-import math
 import numpy
-import h5py
-from h5py import h5s
 
-import westpa
-from westpa.data_manager import weight_dtype, n_iter_dtype, seg_id_dtype
+from westpa.data_manager import weight_dtype
 from westpa.westtools import (
     WESTMasterCommand,
     WESTParallelTool,
-    WESTDataReader,
-    IterRangeSelection,
-    WESTSubcommand,
-    ProgressIndicatorComponent,
 )
 from westpa import h5io
-from westpa.kinetics import labeled_flux_to_rate, sequence_macro_flux_to_rate, WKinetics
+from westpa.kinetics import sequence_macro_flux_to_rate, WKinetics
 
 # This is the base tool class.  We're going to use it for the post analysis stuff, as well.
 from westpa.westtools.kinetics_tool import WESTKineticsBase, AverageCommands
 
-from westpa import mclib
 from westpa.mclib import (
-    mcbs_correltime,
     mcbs_ci_correl,
     _1D_simple_eval_block,
     _2D_simple_eval_block,
 )
 
-# We'll need to integrate this properly.
-log = logging.getLogger("westtools.w_reweight")
-
-from westpa.westtools.dtypes import iter_block_ci_dtype as ci_dtype
-
 # From w_stateprobs
 from westpa.binning import accumulate_state_populations_from_labeled
+
+# We'll need to integrate this properly.
+log = logging.getLogger("westtools.w_reweight")
 
 # This block is responsible for submitting a set of calculations to be bootstrapped over for a particular type of calculation.
 # A property which wishes to be calculated should adhere to this format.
@@ -126,21 +106,21 @@ following datasets:
   ``/conditional_arrivals`` [iteration][stateA][stateB]
     *(Integer)* Number of trajectories arriving at state *stateB* in a given
     iteration, given that they departed from *stateA*.
-    
+
   ``/total_fluxes`` [iteration][state]
     *(Floating-point)* Total flux into a given macrostate.
-    
+
   ``/arrivals`` [iteration][state]
     *(Integer)* Number of trajectories arriving at a given state in a given
     iteration, regardless of where they originated.
 
   ``/duration_count`` [iteration]
     *(Integer)* The number of event durations recorded in each iteration.
-    
+
   ``/durations`` [iteration][event duration]
     *(Structured -- see below)*  Event durations for transition events ending
     during a given iteration. These are stored as follows:
-      
+
       istate
         *(Integer)* Initial state of transition event.
       fstate
@@ -154,7 +134,7 @@ following datasets:
 Because state-to-state fluxes stored in this file are not normalized by
 initial macrostate population, they cannot be used as rates without further
 processing. The ``w_direct kinetics`` command is used to perform this normalization
-while taking statistical fluctuation and correlation into account. See 
+while taking statistical fluctuation and correlation into account. See
 ``w_direct kinetics --help`` for more information.  Target fluxes (total flux
 into a given state) require no such normalization.
 
@@ -162,9 +142,6 @@ into a given state) require no such normalization.
 Command-line options
 -----------------------------------------------------------------------------
 """
-
-    def __init__(self, parent):
-        super(DKinetics, self).__init__(parent)
 
     def open_files(self):
         self.output_file = h5io.WESTPAH5File(
@@ -189,10 +166,10 @@ class DKinAvg(AverageCommands):
     help_text = "Generates rate and flux values from a WESTPA simulation via tracing."
     default_kinetics_file = "direct.h5"
     description = """\
-Calculate average rates/fluxes and associated errors from weighted ensemble 
-data. Bin assignments (usually "assign.h5") and kinetics data (usually 
-"direct.h5") data files must have been previously generated (see 
-"w_assign --help" and "w_direct init --help" for information on 
+Calculate average rates/fluxes and associated errors from weighted ensemble
+data. Bin assignments (usually "assign.h5") and kinetics data (usually
+"direct.h5") data files must have been previously generated (see
+"w_assign --help" and "w_direct init --help" for information on
 generating these files).
 
 The evolution of all datasets may be calculated, with or without confidence
@@ -212,7 +189,7 @@ dataset:
   /avg_total_fluxes [state]
     (Structured -- see below) Total fluxes into each state based on entire
     window of iterations selected.
-    
+
   /avg_conditional_fluxes [state,state]
     (Structured -- see below) State-to-state fluxes based on entire window of
     iterations selected.
@@ -224,35 +201,35 @@ available:
     (Structured -- see below). State-to-state rates based on windows of
     iterations of varying width.  If --evolution-mode=cumulative, then
     these windows all begin at the iteration specified with
-    --start-iter and grow in length by --step-iter for each successive 
+    --start-iter and grow in length by --step-iter for each successive
     element. If --evolution-mode=blocked, then these windows are all of
     width --step-iter (excluding the last, which may be shorter), the first
     of which begins at iteration --start-iter.
-    
+
   /target_flux_evolution [window,state]
     (Structured -- see below). Total flux into a given macro state based on
     windows of iterations of varying width, as in /rate_evolution.
-    
+
   /conditional_flux_evolution [window,state,state]
     (Structured -- see below). State-to-state fluxes based on windows of
     varying width, as in /rate_evolution.
-    
+
 The structure of these datasets is as follows:
 
   iter_start
     (Integer) Iteration at which the averaging window begins (inclusive).
-    
+
   iter_stop
     (Integer) Iteration at which the averaging window ends (exclusive).
-    
+
   expected
     (Floating-point) Expected (mean) value of the observable as evaluated within
     this window, in units of inverse tau.
-    
+
   ci_lbound
     (Floating-point) Lower bound of the confidence interval of the observable
     within this window, in units of inverse tau.
-    
+
   ci_ubound
     (Floating-point) Upper bound of the confidence interval of the observable
     within this window, in units of inverse tau.
@@ -260,7 +237,7 @@ The structure of these datasets is as follows:
   stderr
     (Floating-point) The standard error of the mean of the observable
     within this window, in units of inverse tau.
-    
+
   corr_len
     (Integer) Correlation length of the observable within this window, in units
     of tau.
@@ -268,16 +245,16 @@ The structure of these datasets is as follows:
 Each of these datasets is also stamped with a number of attributes:
 
   mcbs_alpha
-    (Floating-point) Alpha value of confidence intervals. (For example, 
+    (Floating-point) Alpha value of confidence intervals. (For example,
     *alpha=0.05* corresponds to a 95% confidence interval.)
 
   mcbs_nsets
     (Integer) Number of bootstrap data sets used in generating confidence
     intervals.
-    
+
   mcbs_acalpha
     (Floating-point) Alpha value for determining correlation lengths.
-   
+
 
 -----------------------------------------------------------------------------
 Command-line options
@@ -425,7 +402,7 @@ available:
     (Structured -- see below). State populations based on windows of
     iterations of varying width.  If --evolution-mode=cumulative, then
     these windows all begin at the iteration specified with
-    --start-iter and grow in length by --step-iter for each successive 
+    --start-iter and grow in length by --step-iter for each successive
     element. If --evolution-mode=blocked, then these windows are all of
     width --step-iter (excluding the last, which may be shorter), the first
     of which begins at iteration --start-iter.
@@ -434,27 +411,27 @@ available:
     (Structured -- see below). Ensemble populations based on windows of
     iterations of varying width.  If --evolution-mode=cumulative, then
     these windows all begin at the iteration specified with
-    --start-iter and grow in length by --step-iter for each successive 
+    --start-iter and grow in length by --step-iter for each successive
     element. If --evolution-mode=blocked, then these windows are all of
     width --step-iter (excluding the last, which may be shorter), the first
     of which begins at iteration --start-iter.
-    
+
 The structure of these datasets is as follows:
 
   iter_start
     (Integer) Iteration at which the averaging window begins (inclusive).
-    
+
   iter_stop
     (Integer) Iteration at which the averaging window ends (exclusive).
-    
+
   expected
     (Floating-point) Expected (mean) value of the observable as evaluated within
     this window, in units of inverse tau.
-    
+
   ci_lbound
     (Floating-point) Lower bound of the confidence interval of the observable
     within this window, in units of inverse tau.
-    
+
   ci_ubound
     (Floating-point) Upper bound of the confidence interval of the observable
     within this window, in units of inverse tau.
@@ -462,7 +439,7 @@ The structure of these datasets is as follows:
   stderr
     (Floating-point) The standard error of the mean of the observable
     within this window, in units of inverse tau.
-    
+
   corr_len
     (Integer) Correlation length of the observable within this window, in units
     of tau.
@@ -476,10 +453,10 @@ Each of these datasets is also stamped with a number of attributes:
   mcbs_nsets
     (Integer) Number of bootstrap data sets used in generating confidence
     intervals.
-    
+
   mcbs_acalpha
     (Floating-point) Alpha value for determining correlation lengths.
-   
+
 
 -----------------------------------------------------------------------------
 Command-line options
@@ -593,8 +570,8 @@ class DAll(DStateProbs, DKinAvg, DKinetics):
     help_text = "Runs the full suite, including the tracing of events."
     default_kinetics_file = "direct.h5"
     description = """\
-A convenience function to run init/kinetics/probs. Bin assignments, 
-including macrostate definitions, are required. (See 
+A convenience function to run init/kinetics/probs. Bin assignments,
+including macrostate definitions, are required. (See
 "w_assign --help" for more information).
 
 For more information on the individual subcommands this subs in for, run
@@ -621,8 +598,8 @@ class DAverage(DStateProbs, DKinAvg):
     help_text = "Averages and returns fluxes, rates, and color/state populations."
     default_kinetics_file = "direct.h5"
     description = """\
-A convenience function to run kinetics/probs. Bin assignments, 
-including macrostate definitions, are required. (See 
+A convenience function to run kinetics/probs. Bin assignments,
+including macrostate definitions, are required. (See
 "w_assign --help" for more information).
 
 For more information on the individual subcommands this subs in for, run
@@ -647,5 +624,9 @@ class WDirect(WESTMasterCommand, WESTParallelTool):
     subparsers_title = "direct kinetics analysis schemes"
 
 
-if __name__ == "__main__":
+def main():
     WDirect().main()
+
+
+if __name__ == "__main__":
+    main()

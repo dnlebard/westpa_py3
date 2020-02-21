@@ -1,10 +1,13 @@
+#!/usr/bin/env python
 import sys
+
 from westpa.westtools import (
     WESTMasterCommand,
     WESTParallelTool,
 )
 
-from westpa.scripts.w_reweight import RWMatrix
+from westpa.commands.w_reweight import RWMatrix
+
 
 # Just a shim to make sure everything works and is backwards compatible.
 # We're making sure it has the appropriate functions so that it can be called
@@ -51,7 +54,7 @@ following datasets:
     iteration.  They are reconstructed and averaged within the
     w_reweight {kinetics/probs} routines so that observables may
     be calculated.  Each group contains 4 vectors of data:
-      
+
       flux
         *(Floating-point)* The weight of a series of flux events
       cols
@@ -68,7 +71,7 @@ Command-line options
 """
 
 
-if __name__ == "__main__":
+def main():
     print(
         "WARNING: {} is being deprecated.  Please use w_reweight instead.".format(
             WReweight.prog
@@ -82,3 +85,7 @@ if __name__ == "__main__":
     except Exception:
         sys.argv.insert(1, "init")
     WReweight().main()
+
+
+if __name__ == "__main__":
+    main()

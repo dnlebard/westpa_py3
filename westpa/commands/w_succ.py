@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 import sys
 import argparse
 import numpy
@@ -17,7 +18,7 @@ log = logging.getLogger("w_succ")
 
 class WSucc(CommonOutputMixin, WESTDataReaderMixin, WESTAnalysisTool):
     def __init__(self):
-        super(WSucc, self).__init__()
+        super().__init__()
         self.include_args["CommonOutputMixin"]["print_bin_labels"] = False
         self.output_file = sys.stdout
 
@@ -75,7 +76,7 @@ class WSucc(CommonOutputMixin, WESTDataReaderMixin, WESTAnalysisTool):
                 self.output_file.write("\n")
 
 
-if __name__ == "__main__":
+def main():
     wsucc = WSucc()
 
     parser = argparse.ArgumentParser(
@@ -100,3 +101,7 @@ if __name__ == "__main__":
     wsucc.output_file = args.output_file
 
     wsucc.find_successful_trajs()
+
+
+if __name__ == "__main__":
+    main()
