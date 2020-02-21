@@ -1,8 +1,6 @@
-import sys
 import logging
 import math
 from numpy import index_exp
-import h5py
 
 from westpa.data_manager import seg_id_dtype, weight_dtype
 from westpa.binning import index_dtype, assign_and_label, accumulate_labeled_populations
@@ -11,7 +9,6 @@ from westpa.westtools import (
     WESTDataReader,
     WESTDSSynthesizer,
     BinMappingComponent,
-    mapper_from_dict,
     ProgressIndicatorComponent,
 )
 import numpy
@@ -21,6 +18,7 @@ from westpa.h5io import WESTPAH5File
 from westpa.extloader import get_object
 
 log = logging.getLogger("westtools.w_assign")
+
 
 # Changes to keep it alive...
 def parse_pcoord_value(pc_str):

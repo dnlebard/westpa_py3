@@ -1,16 +1,14 @@
+#!/usr/bin/env python
 import logging
 
 from westpa.westtools import (
     WESTParallelTool,
-    WESTDataReader,
-    WESTDSSynthesizer,
-    IterRangeSelection,
     ProgressIndicatorComponent,
 )
-import numpy, h5py
+import numpy
+import h5py
 from westpa.fasthist import histnd, normhistnd
 from westpa import h5io
-from westpa.h5io import SingleIterDSSpec
 
 log = logging.getLogger("westtools.w_pdist")
 

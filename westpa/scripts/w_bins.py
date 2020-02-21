@@ -1,4 +1,5 @@
-import logging, sys
+import sys
+import logging
 import numpy
 
 from westpa.westtools import WESTTool, WESTDataReader, BinMappingComponent
@@ -13,7 +14,7 @@ class WBinTool(WESTTool):
     prog = "w_bins"
     description = """\
 Display information and statistics about binning in a WEST simulation, or
-modify the binning for the current iteration of a WEST simulation.        
+modify the binning for the current iteration of a WEST simulation.
 -------------------------------------------------------------------------------
 """
 

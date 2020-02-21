@@ -1,4 +1,7 @@
+import os
 import warnings
+
+import hashlib
 
 import numpy as np
 import codecs
@@ -7,14 +10,10 @@ import base64
 # Must be run with the WEST wrapper.
 from westpa import h5io
 import westpa
-import os
+
 import w_assign
 import w_direct
 import w_reweight
-
-import hashlib
-
-# sys.tracebacklimit = 5
 
 from westpa.westtools import (
     WESTParallelTool,
@@ -26,6 +25,7 @@ from westpa.westtools import (
 from westpa.westtools import WIPIDataset, __get_data_for_iteration__, WIPIScheme
 
 warnings.filterwarnings("ignore")
+
 warnings.filterwarnings("ignore", category=DeprecationWarning)
 warnings.filterwarnings("ignore", category=RuntimeWarning)
 warnings.filterwarnings("ignore", category=FutureWarning)

@@ -1,4 +1,7 @@
-from westpa.westtools import WESTMasterCommand, WESTParallelTool
+from westpa.westtools import (
+    WESTMasterCommand,
+    WESTParallelTool,
+)
 
 from westpa.scripts.w_direct import DKinAvg
 

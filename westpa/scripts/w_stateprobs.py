@@ -1,10 +1,11 @@
+import sys
 from westpa.westtools import (
     WESTMasterCommand,
     WESTParallelTool,
 )
 
 from westpa.scripts.w_direct import DStateProbs
-import sys
+
 
 # Just a shim to make sure everything works and is backwards compatible.
 # We're making sure it has the appropriate functions so that it can be called

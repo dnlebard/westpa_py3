@@ -1,50 +1,29 @@
 import logging
 
-# Let's suppress those numpy warnings.
-import warnings
-
-# warnings.filterwarnings('ignore', category=DeprecationWarning)
-# warnings.filterwarnings('ignore', category=RuntimeWarning)
-# warnings.filterwarnings('ignore', category=FutureWarning)
-
-import sys
-import random
-import math
 import numpy
-import h5py
-from h5py import h5s
 
-import westpa
-from westpa.data_manager import weight_dtype, n_iter_dtype, seg_id_dtype
+from westpa.data_manager import weight_dtype
 from westpa.westtools import (
     WESTMasterCommand,
     WESTParallelTool,
-    WESTDataReader,
-    IterRangeSelection,
-    WESTSubcommand,
-    ProgressIndicatorComponent,
 )
 from westpa import h5io
-from westpa.kinetics import labeled_flux_to_rate, sequence_macro_flux_to_rate, WKinetics
+from westpa.kinetics import sequence_macro_flux_to_rate, WKinetics
 
 # This is the base tool class.  We're going to use it for the post analysis stuff, as well.
 from westpa.westtools.kinetics_tool import WESTKineticsBase, AverageCommands
 
-from westpa import mclib
 from westpa.mclib import (
-    mcbs_correltime,
     mcbs_ci_correl,
     _1D_simple_eval_block,
     _2D_simple_eval_block,
 )
 
-# We'll need to integrate this properly.
-log = logging.getLogger("westtools.w_reweight")
-
-from westpa.westtools.dtypes import iter_block_ci_dtype as ci_dtype
-
 # From w_stateprobs
 from westpa.binning import accumulate_state_populations_from_labeled
+
+# We'll need to integrate this properly.
+log = logging.getLogger("westtools.w_reweight")
 
 # This block is responsible for submitting a set of calculations to be bootstrapped over for a particular type of calculation.
 # A property which wishes to be calculated should adhere to this format.

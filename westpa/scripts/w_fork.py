@@ -1,4 +1,5 @@
-import os, sys, logging, argparse
+import logging
+import argparse
 import numpy
 
 import westpa

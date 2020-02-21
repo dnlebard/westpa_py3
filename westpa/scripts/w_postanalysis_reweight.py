@@ -1,4 +1,5 @@
 import sys
+
 from westpa.westtools import (
     WESTMasterCommand,
     WESTParallelTool,
