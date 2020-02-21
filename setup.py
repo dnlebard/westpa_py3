@@ -1,8 +1,8 @@
 import glob
-from distutils.core import setup
-from distutils.extension import Extension
-
+from setuptools import setup, find_packages
+from setuptools.extension import Extension
 import numpy
+
 
 numpy_include = numpy.get_include()
 
@@ -19,12 +19,14 @@ finally:
 
 suffix = "pyx" if use_cython else "c"
 
+scripts = glob.glob("westpa/scripts/*.py")
+
 setup(
-    name="WESTPA",
-    packages=["westpa"],
-    version="0.0.1",
+    name="westpa",
+    packages=find_packages(),
+    version="0.0.5",
     cmdclass=cmdclass,
-    scripts=glob.glob("westpa/scripts/*.py"),
+    scripts=scripts,
     install_requires=["blessings", "h5py", "pyyaml", "scipy", "matplotlib"],
     ext_modules=[
         Extension(
