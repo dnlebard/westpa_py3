@@ -479,6 +479,7 @@ class ExecutablePropagator(WESTPropagator):
                         rfname, e
                     )
                 )
+                sys.exit(1)
 
     def gen_istate(self, basis_state, initial_state):
         """Generate a new initial state from the given basis state."""

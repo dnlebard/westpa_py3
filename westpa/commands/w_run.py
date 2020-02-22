@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 
+import sys
 import logging
 import argparse
 import traceback
@@ -59,9 +60,11 @@ def main():
                 sim_manager.finalize_run()
             except KeyboardInterrupt:
                 rc.pstatus("interrupted; shutting down")
+                sys.exit(1)
             except Exception:
                 rc.pstatus("exception caught; shutting down")
                 log.error(traceback.format_exc())
+                sys.exit(1)
         else:
             work_manager.run()
 
