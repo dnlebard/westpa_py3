@@ -497,6 +497,7 @@ class ExecutablePropagator(WESTPropagator):
                         rfname, e
                     )
                 )
+                sys.exit(1)
 
     def gen_istate(self, basis_state, initial_state):
         """Generate a new initial state from the given basis state."""
@@ -514,7 +515,7 @@ class ExecutablePropagator(WESTPropagator):
         # Determine and load the progress coordinate value for this state
         try:
             self.get_pcoord(initial_state)
-        except:
+        except Exception:
             log.exception(
                 "could not get progress coordinate for initial state {!r}".format(
                     initial_state

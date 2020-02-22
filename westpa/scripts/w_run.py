@@ -16,7 +16,7 @@
 # You should have received a copy of the GNU General Public License
 # along with WESTPA.  If not, see <http://www.gnu.org/licenses/>.
 
-
+import sys
 import logging
 import argparse
 import traceback
@@ -76,8 +76,10 @@ if __name__ == "__main__":
                 sim_manager.finalize_run()
             except KeyboardInterrupt:
                 rc.pstatus("interrupted; shutting down")
+                sys.exit(1)
             except Exception:
                 rc.pstatus("exception caught; shutting down")
                 log.error(traceback.format_exc())
+                sys.exit(1)
         else:
             work_manager.run()
