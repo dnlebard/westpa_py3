@@ -85,14 +85,12 @@ class ZMQTestBase:
         del self._endpoints
 
     def setUp(self):
-        super().setUp()
         self._endpoints = []
         self.test_core = ZMQCore()
         self.test_core.context = self.test_context = zmq.Context()
         self.test_core.validation_fail_action = "raise"
 
     def tearDown(self):
-        super().tearDown()
         self.cleanup_endpoints()
         self.test_context.destroy(linger=1)
         del self.test_context

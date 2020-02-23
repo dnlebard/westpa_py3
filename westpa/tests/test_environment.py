@@ -1,27 +1,53 @@
-import os, argparse
-import work_managers.environment
-from work_managers.environment import make_work_manager, add_wm_args, process_wm_args
-from work_managers import (
+# Copyright (C) 2013 Matthew C. Zwier and Lillian T. Chong
+#
+# This file is part of WESTPA.
+#
+# WESTPA is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# WESTPA is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with WESTPA.  If not, see <http://www.gnu.org/licenses/>.
+
+import os
+import argparse
+from westpa import work_managers
+from westpa.work_managers.environment import (
+    make_work_manager,
+    add_wm_args,
+    process_wm_args,
+)
+from westpa.work_managers import (
     SerialWorkManager,
     ThreadsWorkManager,
     ProcessWorkManager,
     ZMQWorkManager,
 )
-from .tsupport import will_succeed
+from westpa.tests.tsupport import will_succeed
+
+from unittest import TestCase
 
 
-class TestInstantiations:
+class TestInstantiations(TestCase):
     """Test to see that the environment system at least selects the proper work manager and sets the
     number of workers appropriately"""
 
     sanitize_vars = ("WM_WORK_MANAGER", "WM_N_WORKERS")
 
     def setUp(self):
+        super().setUp()
         for varname in self.sanitize_vars:
             assert varname not in os.environ
         work_managers.environment.default_env.args = None
 
     def tearDown(self):
+        super().tearDown()
         for varname in self.sanitize_vars:
             os.environ.pop(varname, None)
         work_managers.environment.default_env.args = None

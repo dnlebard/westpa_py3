@@ -1,6 +1,14 @@
-import sys, logging, multiprocessing, threading, traceback, signal, os, random
+import sys
+import logging
+import multiprocessing
+import threading
+import traceback
+import signal
+import os
+import random
+
 from westpa import work_managers
-from . import WorkManager, WMFuture
+from westpa.work_managers.core import WorkManager, WMFuture
 
 log = logging.getLogger(__name__)
 
@@ -22,7 +30,7 @@ class ProcessWorkManager(WorkManager):
         return cls(wmenv.get_val("n_workers", multiprocessing.cpu_count(), int))
 
     def __init__(self, n_workers=None, shutdown_timeout=1):
-        super(ProcessWorkManager, self).__init__()
+        super().__init__()
         self.n_workers = n_workers or multiprocessing.cpu_count()
         self.workers = None
         self.task_queue = multiprocessing.Queue()
@@ -87,8 +95,6 @@ class ProcessWorkManager(WorkManager):
         return ft
 
     def startup(self):
-        from westpa.work_managers import environment
-
         if not self.running:
             log.debug("starting up work manager {!r}".format(self))
             self.running = True
@@ -99,7 +105,9 @@ class ProcessWorkManager(WorkManager):
                 for i in range(self.n_workers)
             ]
 
-            pi_name = "{}_PROCESS_INDEX".format(environment.WMEnvironment.env_prefix)
+            pi_name = "{}_PROCESS_INDEX".format(
+                work_managers.environment.WMEnvironment.env_prefix
+            )
             for iworker, worker in enumerate(self.workers):
                 os.environ[pi_name] = str(iworker)
                 worker.start()

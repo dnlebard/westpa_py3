@@ -15,25 +15,10 @@
 # You should have received a copy of the GNU General Public License
 # along with WESTPA.  If not, see <http://www.gnu.org/licenses/>.
 
-from unittest import TestCase
-
-from westpa.work_managers.threads import ThreadsWorkManager
-from westpa.tests.tsupport import CommonWorkManagerTests, CommonParallelTests
+from westpa.work_managers.serial import SerialWorkManager
+from westpa.tests.tsupport import CommonWorkManagerTests
 
 
-class TestThreadsWorkManager(CommonWorkManagerTests, CommonParallelTests):
+class TestSerialWorkManager(CommonWorkManagerTests):
     def setUp(self):
-        self.work_manager = ThreadsWorkManager()
-        self.work_manager.startup()
-
-    def tearDown(self):
-        self.work_manager.shutdown()
-
-
-class TestThreadsWorkManagerAux(TestCase):
-    def test_shutdown(self):
-        work_manager = ThreadsWorkManager()
-        work_manager.startup()
-        work_manager.shutdown()
-        for worker in work_manager.workers:
-            assert not worker.is_alive()
+        self.work_manager = SerialWorkManager()

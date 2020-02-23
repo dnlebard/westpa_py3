@@ -1,7 +1,10 @@
 """Module of common tool test class"""
 
-import nose
-import tempfile, shutil, os, itertools, re
+import tempfile
+import shutil
+import os
+import itertools
+import re
 
 
 def get_arg_flag(key):
@@ -44,12 +47,13 @@ class CommonToolTest:
 
     @classmethod
     def setUpClass(cls):
+        cls.init_dir = os.getcwd()
         cls.tempdir = tempfile.mkdtemp(prefix="w_tools_test")
         os.chdir(cls.tempdir)
 
     @classmethod
     def tearDownClass(cls):
-        os.chdir("{}/lib/west_tools/tests".format(os.environ["WEST_ROOT"]))
+        os.chdir(cls.init_dir)
         shutil.rmtree(cls.tempdir)
 
     def mktemp(self, suffix=".h5", prefix="", dirname=None):
@@ -87,4 +91,7 @@ class CommonToolTest:
         raise NotImplementedError
 
     def test_args(self, **kwargs):
-        raise NotImplementedError
+        # print(self.__class__, type(self), , CommonToolTest)
+        # If not subclassed, its safe
+        if len(self.__class__.__class__.__mro__) > 2:
+            raise NotImplementedError

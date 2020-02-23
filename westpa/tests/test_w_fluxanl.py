@@ -1,10 +1,8 @@
 import math
-import h5py
-
-from nose.plugins.skip import SkipTest
-
+from unittest import skip
 from westpa.tests.common import CommonToolTest, cycle_args, make_args
-from westpa.commands.w_fluxanl import WFluxanlTool
+from westpa.scripts.w_fluxanl import WFluxanlTool
+import h5py
 
 
 def get_flux_group(f):
@@ -135,7 +133,7 @@ class Test_W_Fluxanl_Args(CommonToolTest):
     """
 
 
-@SkipTest
+@skip("We are skipping these")
 class Test_W_Fluxanl_System(CommonToolTest):
     """System level tests for w_fluxanl"""
 

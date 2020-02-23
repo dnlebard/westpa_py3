@@ -1,19 +1,29 @@
 import time
-from work_managers.zeromq import ZMQWorker
-from work_managers.zeromq.core import Message, Task, Result, TIMEOUT_MASTER_BEACON
-from test_work_managers.tsupport import *
-
-from contextlib import contextmanager
+from westpa.work_managers.zeromq import ZMQWorker
+from westpa.work_managers.zeromq.core import (
+    Message,
+    Task,
+    Result,
+    TIMEOUT_MASTER_BEACON,
+)
+from westpa.tests.tsupport import (
+    will_fail,
+    ExceptionForTest,
+    random_int,
+    identity,
+    will_busyhang_uninterruptible,
+    will_busyhang,
+)
 
 import zmq
 
-import nose.tools
-from nose.tools import raises, nottest, timed, assert_raises  # @UnresolvedImport
-from unittest import skip
 
-
-from . import SETUP_WAIT, TEARDOWN_WAIT, SHUTDOWN_WAIT, BEACON_PERIOD, BEACON_WAIT
-from . import ZMQTestBase
+from westpa.tests.test_zeromq import (
+    SETUP_WAIT,
+    TEARDOWN_WAIT,
+    BEACON_PERIOD,
+    ZMQTestBase,
+)
 
 
 class TestZMQWorkerBasic(ZMQTestBase):
@@ -24,8 +34,8 @@ class TestZMQWorkerBasic(ZMQTestBase):
     (the parts of the WM that do not require ZMQWorker)."""
 
     def setUp(self):
-        super(TestZMQWorkerBasic, self).setUp()
-
+        print(dir(super()), super().__class__)
+        super().setUp()
         self.rr_endpoint = self.make_endpoint()
         self.ann_endpoint = self.make_endpoint()
 
@@ -54,7 +64,7 @@ class TestZMQWorkerBasic(ZMQTestBase):
         self.test_worker.signal_shutdown()
         self.test_worker.comm_thread.join()
 
-        super(TestZMQWorkerBasic, self).tearDown()
+        super().tearDown()
 
     def send_task(self, task):
         self.test_core.send_message(self.ann_socket, Message.TASKS_AVAILABLE)

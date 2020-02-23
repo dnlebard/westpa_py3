@@ -1,10 +1,32 @@
-import os, signal
+# Copyright (C) 2013 Matthew C. Zwier and Lillian T. Chong
+#
+# This file is part of WESTPA.
+#
+# WESTPA is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# WESTPA is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with WESTPA.  If not, see <http://www.gnu.org/licenses/>.
 
-from work_managers.processes import ProcessWorkManager
-from .tsupport import *
+import os
+import signal
 
-import nose.tools
-from nose.tools import raises
+from unittest import TestCase
+from westpa.work_managers.processes import ProcessWorkManager
+from westpa.tests.tsupport import (
+    CommonParallelTests,
+    CommonWorkManagerTests,
+    will_busyhang,
+    will_busyhang_uninterruptible,
+    get_process_index,
+)
 
 
 class TestProcessWorkManager(CommonParallelTests, CommonWorkManagerTests):
@@ -16,8 +38,7 @@ class TestProcessWorkManager(CommonParallelTests, CommonWorkManagerTests):
         self.work_manager.shutdown()
 
 
-class TestProcessWorkManagerAux:
-    @nose.tools.timed(2)
+class TestProcessWorkManagerAux(TestCase):
     def test_shutdown(self):
         work_manager = ProcessWorkManager()
         work_manager.startup()
@@ -25,7 +46,6 @@ class TestProcessWorkManagerAux:
         for worker in work_manager.workers:
             assert not worker.is_alive()
 
-    @nose.tools.timed(2)
     def test_hang_shutdown(self):
         work_manager = ProcessWorkManager()
         work_manager.shutdown_timeout = 0.1
@@ -36,7 +56,6 @@ class TestProcessWorkManagerAux:
         for worker in work_manager.workers:
             assert not worker.is_alive()
 
-    @nose.tools.timed(2)
     def test_hang_shutdown_ignoring_sigint(self):
         work_manager = ProcessWorkManager()
         work_manager.shutdown_timeout = 0.1
@@ -47,8 +66,6 @@ class TestProcessWorkManagerAux:
         for worker in work_manager.workers:
             assert not worker.is_alive()
 
-    @nose.tools.timed(2)
-    @raises(KeyboardInterrupt)
     def test_sigint_shutdown(self):
         work_manager = ProcessWorkManager()
         work_manager.install_sigint_handler()
@@ -59,12 +76,11 @@ class TestProcessWorkManagerAux:
 
         try:
             os.kill(os.getpid(), signal.SIGINT)
+            assert False
         except KeyboardInterrupt:
             for worker in work_manager.workers:
                 assert not worker.is_alive()
-            raise
 
-    @nose.tools.timed(2)
     def test_worker_ids(self):
         work_manager = ProcessWorkManager()
         with work_manager:

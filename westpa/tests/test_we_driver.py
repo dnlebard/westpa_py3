@@ -1,14 +1,13 @@
-from ..we_driver import WEDriver
-from ..systems import WESTSystem
+from westpa.we_driver import WEDriver
+from westpa.systems import WESTSystem
 from westpa.binning import RectilinearBinMapper
-from ..states import TargetState, InitialState
-from ..segment import Segment
+from westpa.states import TargetState, InitialState
+from westpa.segment import Segment
 import numpy
 
-EPS = numpy.finfo(numpy.float64).eps
+import unittest
 
-import nose
-import nose.tools
+EPS = numpy.finfo(numpy.float64).eps
 
 
 class TestWEDriver:
@@ -306,7 +305,7 @@ class TestWEDriver:
         self.we_driver.populate_initial([istate], [prob], system=self.system)
         assert len(self.we_driver.next_iter_binning[0]) == target_counts
 
-    @nose.SkipTest
+    @unittest.skip
     def test_populate_initial(self):
         for prob in [0.1, 1.0 / 3.0, 0.9999999999970001, 1.0]:
             for tcount in range(30, 60):

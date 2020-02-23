@@ -1,9 +1,27 @@
-from work_managers.serial import SerialWorkManager
-from nose.tools import assert_raises  # @UnresolvedImport
-from .tsupport import *
+# Copyright (C) 2013 Matthew C. Zwier and Lillian T. Chong
+#
+# This file is part of WESTPA.
+#
+# WESTPA is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# WESTPA is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with WESTPA.  If not, see <http://www.gnu.org/licenses/>.
+
+from westpa.work_managers.serial import SerialWorkManager
+from westpa.tests.tsupport import will_fail, will_succeed, ExceptionForTest
+
+from unittest import TestCase
 
 
-class TestWMFuture:
+class TestWMFuture(TestCase):
     def test_result(self):
         with SerialWorkManager() as work_manager:
             future = work_manager.submit(will_succeed)
@@ -13,13 +31,14 @@ class TestWMFuture:
         with SerialWorkManager() as work_manager:
             future = work_manager.submit(will_succeed)
             assert future.get_result(discard=True) is True
-            assert_raises(AttributeError, getattr, future, "_result")
+            with self.assertRaises(AttributeError):
+                getattr(future, "_result")
 
-    @raises(ExceptionForTest)
     def test_exception_raise(self):
         with SerialWorkManager() as work_manager:
             future = work_manager.submit(will_fail)
-            future.get_result()
+            with self.assertRaises(ExceptionForTest):
+                future.get_result()
 
     def test_exception_retrieve(self):
         with SerialWorkManager() as work_manager:

@@ -1,14 +1,12 @@
 """
 A work manager which uses MPI to distribute tasks and collect results.
 """
-
-
-import logging, re, threading
+import logging
+import threading
 from collections import deque
 from mpi4py import MPI
 
-import work_managers
-from work_managers import WorkManager, WMFuture
+from westpa.work_managers.core import WorkManager, WMFuture
 
 log = logging.getLogger(__name__)
 
@@ -46,7 +44,7 @@ class MPIBase:
         self.announce_tag = 30
 
         # create an empty message buffer
-        messages = []
+        # messages = []
 
     def startup(self):
         raise NotImplementedError
@@ -66,7 +64,7 @@ class MPIBase:
 
 class MPIWMServer(MPIBase):
     def __init__(self):
-        super(MPIWMServer, self).__init__()
+        super().__init__()
 
         # tasks awaiting dispatch
         self.task_queue = deque()
@@ -169,7 +167,7 @@ class MPIWMServer(MPIBase):
 
 class MPIClient(MPIBase):
     def __init__(self):
-        super(MPIClient, self).__init__()
+        super().__init__()
 
     def _create_worker(self):
         comm = self.comm

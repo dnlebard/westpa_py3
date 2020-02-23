@@ -4,8 +4,16 @@ Created on Jun 10, 2015
 @author: mzwier
 """
 
+import json
+import socket
 import logging
+import multiprocessing
 
+from collections import deque
+
+import zmq
+
+from westpa import work_managers
 from westpa.work_managers.zeromq.core import (
     ZMQCore,
     Message,
@@ -14,22 +22,12 @@ from westpa.work_managers.zeromq.core import (
     ZMQWorkerMissing,
     ZMQWMEnvironmentError,
     IsNode,
+    PassiveMultiTimer,
+    randport,
 )
-from westpa.work_managers.zeromq.core import randport
 from westpa.work_managers.zeromq.worker import ZMQWorker
 from westpa.work_managers.zeromq.node import ZMQNode
-from westpa import work_managers
-from westpa.work_managers import WorkManager, WMFuture
-import multiprocessing
-
-from westpa.work_managers.core import PassiveMultiTimer
-
-import zmq
-
-from collections import deque
-
-import socket
-import json
+from westpa.work_managers.core import WorkManager, WMFuture
 
 log = logging.getLogger(__name__)
 
@@ -149,7 +147,7 @@ class ZMQWorkManager(ZMQCore, WorkManager, IsNode):
     @classmethod
     def from_environ(cls, wmenv=None):
         if wmenv is None:
-            wmenv = work_managers.environment.default_env
+            wmenv = environment.default_env
 
         # determine mode
         mode = wmenv.get_val("zmq_mode", "master").lower()

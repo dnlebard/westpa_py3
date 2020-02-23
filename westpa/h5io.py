@@ -286,7 +286,7 @@ class WESTPAH5File(h5py.File):
         arg_creating_program = kwargs.pop("creating_program", None)
 
         # Initialize h5py file
-        super(WESTPAH5File, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
         # Try to get iteration precision and I/O class version
         h5file_iter_prec = _get_one_attr(
@@ -323,11 +323,11 @@ class WESTPAH5File(h5py.File):
     def replace_dataset(self, *args, **kwargs):
         try:
             del self[args[0]]
-        except:
+        except Exception:
             pass
         try:
             del self[kwargs["name"]]
-        except:
+        except Exception:
             pass
 
         return self.create_dataset(*args, **kwargs)
@@ -365,7 +365,7 @@ class WESTPAH5File(h5py.File):
         return group[self.iter_object_name(n_iter)]
 
 
-### Generalized WE dataset access classes
+# Generalized WE dataset access classes
 
 
 class DSSpec:

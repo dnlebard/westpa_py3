@@ -1,4 +1,6 @@
-from nose.tools import raises, nottest, timed
+import sys
+import time
+from unittest import TestCase
 
 
 class ExceptionForTest(Exception):
@@ -18,8 +20,6 @@ def fn_interrupted():
 
 
 def will_hang():
-    import sys, time
-
     time.sleep(sys.maxsize)
 
 
@@ -56,7 +56,8 @@ def busy_identity(x):
 
 
 def random_int(seed=None):
-    import random, sys
+    import random
+    import sys
 
     if seed is not None:
         random.seed(seed)
@@ -65,7 +66,8 @@ def random_int(seed=None):
 
 
 def get_process_index():
-    import os, time
+    import os
+    import time
 
     time.sleep(1)  # this ensures that each task gets its own worker
     return os.environ["WM_PROCESS_INDEX"]
@@ -125,10 +127,13 @@ class CommonWorkManagerTests:
         )
         assert input == output
 
-    @raises(ExceptionForTest)
     def test_exception_raise(self):
         future = self.work_manager.submit(will_fail)
-        future.get_result()
+        try:
+            future.get_result()
+            assert False, "Should have raised an exception"
+        except ExceptionForTest:
+            pass
 
     def test_exception_retrieve(self):
         future = self.work_manager.submit(will_fail)
@@ -136,7 +141,7 @@ class CommonWorkManagerTests:
         assert exc.args[0] == "failed as expected"
 
 
-class CommonParallelTests:
+class CommonParallelTests(CommonWorkManagerTests):
     def test_random_seq(self):
         tasks = [(random_int, (), {}) for n in range(self.MED_TEST_SIZE)]
         futures = self.work_manager.submit_many(tasks)

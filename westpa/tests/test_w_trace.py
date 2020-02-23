@@ -1,7 +1,6 @@
-import h5py
-
 from westpa.tests.common import CommonToolTest
-from westpa.commands.w_trace import WTraceTool
+from westpa.scripts.w_trace import WTraceTool
+import h5py
 
 
 class Test_W_Trace_Args(CommonToolTest):

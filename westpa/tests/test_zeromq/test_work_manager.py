@@ -6,21 +6,32 @@ Created on Jun 2, 2015
 
 
 import time
-from work_managers.zeromq import ZMQWorkManager, ZMQWorker, ZMQWorkerMissing
-from work_managers.zeromq.core import Message, Task
-from test_work_managers.tsupport import *
+from westpa.work_managers.zeromq import ZMQWorkManager, ZMQWorker, ZMQWorkerMissing
+from westpa.work_managers.zeromq.core import Message, Task
+from westpa.tests.tsupport import (
+    ExceptionForTest,
+    identity,
+    random_int,
+    CommonWorkManagerTests,
+    will_fail,
+    will_busyhang_uninterruptible,
+    will_busyhang,
+)
 
 from contextlib import contextmanager
 
 import zmq
 
-import nose.tools
-from nose.tools import raises, nottest, timed, assert_raises  # @UnresolvedImport
 from unittest import skip
 
 
-from . import SETUP_WAIT, TEARDOWN_WAIT, SHUTDOWN_WAIT, BEACON_PERIOD, BEACON_WAIT
-from . import ZMQTestBase
+from westpa.tests.test_zeromq import (
+    SETUP_WAIT,
+    TEARDOWN_WAIT,
+    BEACON_PERIOD,
+    BEACON_WAIT,
+    ZMQTestBase,
+)
 
 
 class TestZMQWorkManagerBasic(ZMQTestBase):
@@ -29,7 +40,7 @@ class TestZMQWorkManagerBasic(ZMQTestBase):
     (the parts of the WM that do not require ZMQWorker)."""
 
     def setUp(self):
-        super(TestZMQWorkManagerBasic, self).setUp()
+        super().setUp()
 
         self.test_wm = ZMQWorkManager(n_local_workers=0)
 
@@ -177,7 +188,7 @@ class TestZMQWorkManagerBasic(ZMQTestBase):
 
 class BaseInternal(ZMQTestBase, CommonWorkManagerTests):
     def setUp(self):
-        super(BaseInternal, self).setUp()
+        super().setUp()
 
         self.test_wm = ZMQWorkManager(n_local_workers=self.n_workers)
         for worker in self.test_wm.local_workers:
@@ -242,7 +253,7 @@ class TestZMQWorkManagerInternalNone(ZMQTestBase):
     n_workers = 0
 
     def setUp(self):
-        super(TestZMQWorkManagerInternalNone, self).setUp()
+        super().setUp()
 
         self.test_wm = ZMQWorkManager(n_local_workers=self.n_workers)
         for worker in self.test_wm.local_workers:
@@ -297,7 +308,7 @@ class TestZMQWorkManagerInternalMultiple(BaseInternal):
 
 class BaseExternal(ZMQTestBase, CommonWorkManagerTests):
     def setUp(self):
-        super(BaseExternal, self).setUp()
+        super().setUp()
 
         self.test_wm = ZMQWorkManager(n_local_workers=0)
 

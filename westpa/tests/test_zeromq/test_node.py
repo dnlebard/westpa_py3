@@ -1,20 +1,18 @@
-import time, itertools
-from work_managers.zeromq import ZMQWorkManager, ZMQWorker
-from work_managers.zeromq.core import Message, Task, Result
-from work_managers.zeromq.node import ZMQNode
-from test_work_managers.tsupport import *
-
-from contextlib import contextmanager
-
-import zmq
-
-import nose.tools
-from nose.tools import raises, nottest, timed, assert_raises  # @UnresolvedImport
-from unittest import skip
+import time
+import itertools
+from westpa.work_managers.zeromq import ZMQWorkManager, ZMQWorker
+from westpa.work_managers.zeromq.node import ZMQNode
+from westpa.tests.tsupport import CommonWorkManagerTests, random_int, identity
 
 
-from . import SETUP_WAIT, TEARDOWN_WAIT, SHUTDOWN_WAIT, BEACON_PERIOD, BEACON_WAIT
-from . import ZMQTestBase
+from westpa.tests.test_zeromq import (
+    SETUP_WAIT,
+    TEARDOWN_WAIT,
+    SHUTDOWN_WAIT,
+    BEACON_PERIOD,
+    BEACON_WAIT,
+    ZMQTestBase,
+)
 
 
 class TestZMQNodeExternal(ZMQTestBase, CommonWorkManagerTests):
@@ -24,7 +22,7 @@ class TestZMQNodeExternal(ZMQTestBase, CommonWorkManagerTests):
     (the parts of the WM that do not require ZMQWorker)."""
 
     def setUp(self):
-        super(TestZMQNodeExternal, self).setUp()
+        super().setUp()
 
         self.test_wm = ZMQWorkManager(n_local_workers=0)
         upstream_ann_endpoint = self.test_core.make_internal_endpoint()
@@ -108,7 +106,7 @@ class TestZMQNodeInternal(ZMQTestBase, CommonWorkManagerTests):
     (the parts of the WM that do not require ZMQWorker)."""
 
     def setUp(self):
-        super(TestZMQNodeInternal, self).setUp()
+        super().setUp()
 
         self.test_wm = ZMQWorkManager(n_local_workers=0)
         upstream_ann_endpoint = self.test_core.make_internal_endpoint()

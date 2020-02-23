@@ -1,6 +1,10 @@
-import sys, logging, threading, multiprocessing
+import sys
+import logging
+import threading
+import multiprocessing
 import queue
-from . import WorkManager, WMFuture
+
+from westpa.work_managers.core import WorkManager, WMFuture
 from westpa import work_managers
 
 log = logging.getLogger(__name__)
