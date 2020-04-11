@@ -366,12 +366,11 @@ class WESTDataManager:
     def current_iteration(self):
         with self.lock:
             h5file_attrs = self.we_h5file["/"].attrs
-            h5file_attr_keys = list(h5file_attrs.keys())
 
-            if "west_current_iteration" in h5file_attr_keys:
-                return int(self.we_h5file["/"].attrs["west_current_iteration"])
+            if "west_current_iteration" in h5file_attrs.keys():
+                return int(h5file_attrs["west_current_iteration"])
             else:
-                return int(self.we_h5file["/"].attrs["wemd_current_iteration"])
+                return int(h5file_attrs["wemd_current_iteration"])
 
     @current_iteration.setter
     def current_iteration(self, n_iter):

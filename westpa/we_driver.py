@@ -1,6 +1,5 @@
 import logging
 
-log = logging.getLogger(__name__)
 import numpy
 import operator
 from math import ceil
@@ -8,7 +7,9 @@ import random
 
 
 import westpa
-from .segment import Segment
+from westpa.segment import Segment
+
+log = logging.getLogger(__name__)
 
 
 class ConsistencyError(RuntimeError):

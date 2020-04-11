@@ -7,17 +7,17 @@ futures implementation).
 
 import logging
 
-log = logging.getLogger(__name__)
-
-from .core import WorkManager, WMFuture, FutureWatcher
+from westpa.work_managers.core import WorkManager, WMFuture, FutureWatcher
 
 
 # Import core work managers, which should run most everywhere that
 # Python does
-from . import serial, threads, processes
-from .serial import SerialWorkManager
-from .threads import ThreadsWorkManager
-from .processes import ProcessWorkManager
+from westpa.work_managers import serial, threads, processes  # noqa
+from westpa.work_managers.serial import SerialWorkManager
+from westpa.work_managers.threads import ThreadsWorkManager
+from westpa.work_managers.processes import ProcessWorkManager
+
+log = logging.getLogger(__name__)
 
 _available_work_managers = {
     "serial": SerialWorkManager,
@@ -27,8 +27,8 @@ _available_work_managers = {
 
 # Import ZeroMQ work manager if available
 try:
-    from . import zeromq
-    from .zeromq import ZMQWorkManager
+    from westpa.work_managers import zeromq
+    from westpa.work_managers.zeromq import ZMQWorkManager
 except ImportError:
     log.info("ZeroMQ work manager not available")
     log.debug("traceback follows", exc_info=True)
@@ -37,13 +37,13 @@ else:
 
 # Import MPI work manager if available
 try:
-    from . import mpi
-    from .mpi import MPIWorkManager
+    from westpa.work_managers import mpi
+    from westpa.work_managers.mpi import MPIWorkManager
 except ImportError:
     log.info("MPI work manager not available")
     log.debug("traceback follows", exc_info=True)
 else:
     _available_work_managers["mpi"] = MPIWorkManager
 
-from . import environment
-from .environment import make_work_manager
+from westpa.work_managers import environment
+from westpa.work_managers.environment import make_work_manager

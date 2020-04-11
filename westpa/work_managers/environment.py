@@ -2,7 +2,7 @@
 
 
 import os, re
-from . import _available_work_managers
+from westpa.work_managers import _available_work_managers
 
 
 class WMEnvironment:

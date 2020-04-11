@@ -22,7 +22,7 @@ from westpa import work_managers
 from westpa.work_managers import WorkManager, WMFuture
 import multiprocessing
 
-from .core import PassiveMultiTimer
+from westpa.work_managers.core import PassiveMultiTimer
 
 import zmq
 

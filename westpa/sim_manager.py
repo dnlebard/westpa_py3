@@ -287,7 +287,7 @@ class WESimManager:
     ):
         """Initialize a new weighted ensemble simulation, taking ``segs_per_state`` initial
         states from each of the given ``basis_states``.
-        
+
         ``w_init`` is the forward-facing version of this function"""
 
         data_manager = self.data_manager

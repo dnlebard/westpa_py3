@@ -46,7 +46,7 @@ def randipc():
     return endpoint
 
 
-class ZMQTestBase(object):
+class ZMQTestBase:
     """Support routines"""
 
     # default endpoint type for tests whose transport is not otherwise specified

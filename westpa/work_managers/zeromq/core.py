@@ -4,7 +4,30 @@ Created on May 29, 2015
 @author: mzwier
 """
 
-from pickle import UnpicklingError
+
+import logging
+
+# import gevent
+import sys
+import uuid
+import socket
+import os
+import tempfile
+import errno
+import time
+import threading
+import contextlib
+import traceback
+import multiprocessing
+import json
+import re
+from collections import OrderedDict
+
+import signal
+
+import zmq
+import numpy
+
 
 # Every ten seconds the master requests a status report from workers.
 # This also notifies workers that the master is still alive
@@ -14,25 +37,12 @@ DEFAULT_STATUS_POLL = 10
 # amounts of time, we assume a crash and shut down.
 MASTER_CRASH_TIMEOUT = DEFAULT_STATUS_POLL * 6
 WORKER_CRASH_TIMEOUT = DEFAULT_STATUS_POLL * 3
-
-import logging
-
 log = logging.getLogger(__name__)
-
-# import gevent
-import sys, uuid, socket, os, tempfile, errno, time, threading, contextlib, traceback, multiprocessing, json, re
-from collections import OrderedDict
-
-import signal
-
 signames = {
     val: name
     for name, val in reversed(sorted(signal.__dict__.items()))
     if name.startswith("SIG") and not name.startswith("SIG_")
 }
-
-import zmq
-import numpy
 
 DEFAULT_LINGER = 1
 
@@ -50,23 +60,23 @@ def randport(address="127.0.0.1"):
 
 class ZMQWMError(RuntimeError):
     """Base class for errors related to the ZeroMQ work manager itself"""
-
     pass
 
 
 class ZMQWorkerMissing(ZMQWMError):
     """Exception representing that a worker processing a task died or disappeared"""
-
     pass
 
 
 class ZMQWMEnvironmentError(ZMQWMError):
     """Class representing an error in the environment in which the ZeroMQ work manager is running.
     This includes such things as master/worker ID mismatches."""
+    pass
 
 
 class ZMQWMTimeout(ZMQWMEnvironmentError):
     """A timeout of a sort that indicatess that a master or worker has failed or never started."""
+    pass
 
 
 class Message:

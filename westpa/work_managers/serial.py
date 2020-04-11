@@ -1,8 +1,9 @@
-import logging, sys
+import sys
+import logging
+
+from westpa.work_managers.core import WorkManager, WMFuture
 
 log = logging.getLogger(__name__)
-
-from . import WorkManager, WMFuture
 
 
 class SerialWorkManager(WorkManager):
@@ -12,7 +13,7 @@ class SerialWorkManager(WorkManager):
 
     def __init__(self):
         log.debug("initializing serial work manager")
-        super(SerialWorkManager, self).__init__()
+        super().__init__()
         self.n_workers = 1
 
     def submit(self, fn, args=None, kwargs=None):

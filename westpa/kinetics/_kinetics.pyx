@@ -1,5 +1,4 @@
 
-from __future__ import print_function,division
 import cython
 import numpy
 import warnings
