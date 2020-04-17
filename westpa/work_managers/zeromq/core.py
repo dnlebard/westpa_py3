@@ -60,22 +60,26 @@ def randport(address="127.0.0.1"):
 
 class ZMQWMError(RuntimeError):
     """Base class for errors related to the ZeroMQ work manager itself"""
+
     pass
 
 
 class ZMQWorkerMissing(ZMQWMError):
     """Exception representing that a worker processing a task died or disappeared"""
+
     pass
 
 
 class ZMQWMEnvironmentError(ZMQWMError):
     """Class representing an error in the environment in which the ZeroMQ work manager is running.
     This includes such things as master/worker ID mismatches."""
+
     pass
 
 
 class ZMQWMTimeout(ZMQWMEnvironmentError):
     """A timeout of a sort that indicatess that a master or worker has failed or never started."""
+
     pass
 
 

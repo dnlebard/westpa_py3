@@ -17,3 +17,4 @@ westpa.csh
 build/
 dist/
 *.egg-info/
+.noseids

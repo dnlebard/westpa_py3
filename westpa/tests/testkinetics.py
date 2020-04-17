@@ -120,11 +120,11 @@ class TestStreamingStats2D(TestCase):
         mask = numpy.zeros((nbins, nbins), numpy.uint8)
 
         rate_stats1 = StreamingStats2D((nbins, nbins))
-        for d in data[: (nbins / 2)]:
+        for d in data[: (nbins // 2)]:
             rate_stats1.update(d, mask)
 
         rate_stats2 = StreamingStats2D((nbins, nbins))
-        for d in data[(nbins / 2) : nbins]:
+        for d in data[(nbins // 2) : nbins]:
             rate_stats2.update(d, mask)
 
         rate_stats3 = rate_stats1 + rate_stats2
@@ -162,11 +162,11 @@ class TestStreamingStats2D(TestCase):
         mask = numpy.random.randint(2, size=data.shape).astype(numpy.uint8)
 
         rate_stats1 = StreamingStats2D((nbins, nbins))
-        for di, d in enumerate(data[: (nbins / 2)]):
+        for di, d in enumerate(data[: (nbins // 2)]):
             rate_stats1.update(d, mask[di])
 
         rate_stats2 = StreamingStats2D((nbins, nbins))
-        for di, d in enumerate(data[(nbins / 2) :]):
+        for di, d in enumerate(data[(nbins // 2) :]):
             rate_stats2.update(d, mask[di])
 
         rate_stats3 = rate_stats1 + rate_stats2
@@ -210,11 +210,11 @@ class TestStreamingStats1D(TestCase):
         mask = numpy.zeros((nbins,), numpy.uint8)
 
         rate_stats1 = StreamingStats1D(nbins)
-        for d in data[: (nbins / 2)]:
+        for d in data[: (nbins // 2)]:
             rate_stats1.update(d, mask)
 
         rate_stats2 = StreamingStats1D(nbins)
-        for d in data[(nbins / 2) :]:
+        for d in data[(nbins // 2) :]:
             rate_stats2.update(d, mask)
 
         rate_stats3 = rate_stats1 + rate_stats2
@@ -252,11 +252,11 @@ class TestStreamingStats1D(TestCase):
         mask = numpy.random.randint(2, size=data.shape).astype(numpy.uint8)
 
         rate_stats1 = StreamingStats1D(nbins)
-        for di, d in enumerate(data[: (nbins / 2)]):
+        for di, d in enumerate(data[: (nbins // 2)]):
             rate_stats1.update(d, mask[di])
 
         rate_stats2 = StreamingStats1D(nbins)
-        for di, d in enumerate(data[(nbins / 2) :]):
+        for di, d in enumerate(data[(nbins // 2) :]):
             rate_stats2.update(d, mask[di])
 
         rate_stats3 = rate_stats1 + rate_stats2

@@ -23,12 +23,10 @@ from westpa.tests.tsupport import CommonParallelTests
 
 class TestThreadsWorkManager(CommonParallelTests):
     def setUp(self):
-        super().setUp()
         self.work_manager = ThreadsWorkManager()
         self.work_manager.startup()
 
     def tearDown(self):
-        super().tearDown()
         self.work_manager.shutdown()
 
 

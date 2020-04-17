@@ -66,7 +66,7 @@ class TestYAMLFrontEnd:
         test_dict = {
             "west": {
                 "system": {
-                    "driver": "testyamlfe.TESTSystem",
+                    "driver": "westpa.tests.testyamlfe.TESTSystem",
                     "system_options": {
                         "pcoord_ndim": 2,
                         "test_variable": "I'm a test variable",

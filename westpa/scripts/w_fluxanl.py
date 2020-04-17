@@ -7,11 +7,9 @@ import westpa
 from westpa.data_manager import weight_dtype, n_iter_dtype, vstr_dtype
 from westpa.we_driver import NewWeightEntry
 from westpa import mclib, h5io
-<<<<<<< HEAD
 
 from westpa.westtools.dtypes import iter_block_ci_dtype as ci_dtype
-=======
->>>>>>> 4e84bac... Make python scripts executable from bash
+
 
 fluxentry_dtype = numpy.dtype(
     [("n_iter", n_iter_dtype), ("flux", weight_dtype), ("count", numpy.uint)]

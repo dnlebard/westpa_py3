@@ -2,26 +2,41 @@ import os
 import argparse
 import numpy
 
-os.environ["WEST_SIM_ROOT"] = os.path.join(os.environ["WEST_ROOT"], "lib/examples/odld")
-import westpa, west
+from unittest import TestCase
+
+import westpa
 from westpa.binning.assign import RectilinearBinMapper
-
-import nose
-import nose.tools
+from westpa import rc, h5io
 
 
-class TestSimManager:
-    def setup(self):
 
+EXAMPLES_DIR = os.path.join(os.path.dirname(westpa.__file__), "examples")
+
+
+class TestSimManager(TestCase):
+    @classmethod
+    def setUpClass(cls):
+        data_manager = rc.get_data_manager()
+
+        # Store west.h5 file in RAM for testing
+        west_file_name = "west.h5"
+        west_file = h5io.WESTPAH5File(west_file_name, driver="core", backing_store=False)
+
+        data_manager.we_h5file = west_file
+        data_manager.we_h5file_version = int(west_file["/"].attrs.get("west_file_format_version", 0))
+
+    def setUp(self):
+        super().setUp()
         parser = argparse.ArgumentParser()
         westpa.rc.add_args(parser)
 
-        config_file_name = os.path.join(os.environ["WEST_SIM_ROOT"], "west.cfg")
+        config_file_name = os.path.join(EXAMPLES_DIR, "odld", "west.cfg")
         args = parser.parse_args(["-r={}".format(config_file_name)])
         westpa.rc.process_args(args)
         self.sim_manager = westpa.rc.get_sim_manager()
 
-    def teardown(self):
+    def tearDown(self):
+        super().tearDown()
         westpa.rc._sim_manager = None
 
     def test_sim_manager(self):

@@ -5,7 +5,6 @@ import shutil
 import os
 import itertools
 import re
-from unittest import TestCase
 
 
 def get_arg_flag(key):
@@ -42,18 +41,19 @@ def cycle_args(arg_list):
         yield {k: v for (k, v) in zip(keys, values)}
 
 
-class CommonToolTest(TestCase):
+class CommonToolTest:
 
     test_name = None
 
     @classmethod
     def setUpClass(cls):
+        cls.init_dir = os.getcwd()
         cls.tempdir = tempfile.mkdtemp(prefix="w_tools_test")
         os.chdir(cls.tempdir)
 
     @classmethod
     def tearDownClass(cls):
-        os.chdir("{}/lib/west_tools/tests".format(os.environ["WEST_ROOT"]))
+        os.chdir(cls.init_dir)
         shutil.rmtree(cls.tempdir)
 
     def mktemp(self, suffix=".h5", prefix="", dirname=None):
@@ -91,4 +91,7 @@ class CommonToolTest(TestCase):
         raise NotImplementedError
 
     def test_args(self, **kwargs):
-        raise NotImplementedError
+        # print(self.__class__, type(self), , CommonToolTest)
+        # If not subclassed, its safe
+        if len(self.__class__.__class__.__mro__) > 2:
+            raise NotImplementedError

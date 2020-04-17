@@ -138,12 +138,10 @@ class Test_W_Fluxanl_System(CommonToolTest):
     """System level tests for w_fluxanl"""
 
     def setUp(self):
-        super().setUp()
         self.w = WFluxanlTool()
         self.outfile = self.mktemp(prefix="fluxanl")
 
     def tearDown(self):
-        super().tearDown()
         del self.w
 
     def test_alpha(self):

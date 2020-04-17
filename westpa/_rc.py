@@ -331,7 +331,9 @@ class WESTRC:
 
         drivername = self.config.get(["west", "drivers", "we_driver"], "default")
         if drivername.lower() == "default":
-            we_driver = westpa.we_driver.WEDriver(rc=self, system=self.get_system_driver())
+            we_driver = westpa.we_driver.WEDriver(
+                rc=self, system=self.get_system_driver()
+            )
         else:
             we_driver = extloader.get_object(drivername)(rc=self)
         log.debug("loaded WE algorithm driver: {!r}".format(we_driver))

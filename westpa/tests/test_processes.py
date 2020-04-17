@@ -31,12 +31,10 @@ from westpa.tests.tsupport import (
 
 class TestProcessWorkManager(CommonParallelTests, CommonWorkManagerTests):
     def setUp(self):
-        super().setUp()
         self.work_manager = ProcessWorkManager()
         self.work_manager.startup()
 
     def tearDown(self):
-        super().tearDown()
         self.work_manager.shutdown()
 
 

@@ -21,5 +21,4 @@ from westpa.tests.tsupport import CommonWorkManagerTests
 
 class TestSerialWorkManager(CommonWorkManagerTests):
     def setUp(self):
-        super().setUp()
         self.work_manager = SerialWorkManager()

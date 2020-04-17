@@ -1,8 +1,11 @@
 """Routines for configuring the work manager environment"""
 
 
-import os, re
+import os
+import re
 from westpa.work_managers import _available_work_managers
+
+print(_available_work_managers)
 
 
 class WMEnvironment:
@@ -128,7 +131,9 @@ class WMEnvironment:
 
         if work_manager_name not in self.valid_work_managers:
             raise ValueError(
-                "work manager {!r} is invalid or unavailable".format(work_manager_name)
+                "work manager {!r} is invalid or unavailable: Valid managers {}".format(
+                    work_manager_name, self.valid_work_managers
+                )
             )
         else:
             return _available_work_managers[work_manager_name].from_environ(self)
