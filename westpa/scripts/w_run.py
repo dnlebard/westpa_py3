@@ -6,7 +6,7 @@ import traceback
 
 from westpa import rc
 from westpa import work_managers
-from westpa.work_managers import make_work_manager
+from westpa.work_managers.environment import make_work_manager
 
 log = logging.getLogger("w_run")
 

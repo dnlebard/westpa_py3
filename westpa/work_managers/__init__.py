@@ -30,7 +30,6 @@ try:
     _available_work_managers["zmq"] = ZMQWorkManager
 except ImportError:
     log.error("ZeroMQ work manager not available")
-    log.error("traceback follows", exc_info=True)
 
 # Import MPI work manager if available
 try:
@@ -38,6 +37,5 @@ try:
     from westpa.work_managers.mpi import MPIWorkManager
 except ImportError:
     log.info("MPI work manager not available")
-    log.debug("traceback follows", exc_info=True)
 else:
     _available_work_managers["mpi"] = MPIWorkManager

@@ -5,8 +5,6 @@ import os
 import re
 from westpa.work_managers import _available_work_managers
 
-print(_available_work_managers)
-
 
 class WMEnvironment:
     """A class to encapsulate the environment in which work managers are instantiated;

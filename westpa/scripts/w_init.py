@@ -6,7 +6,7 @@ import argparse
 import io
 
 from westpa import work_managers
-from westpa.work_managers import make_work_manager
+from westpa.work_managers.environment import make_work_manager
 
 import westpa
 from westpa.states import TargetState
