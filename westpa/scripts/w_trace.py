@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 import re
 from westpa.westtools import WESTTool, WESTDataReader
 import numpy

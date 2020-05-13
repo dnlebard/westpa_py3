@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 from westpa.westtools import (
     WESTMasterCommand,
     WESTParallelTool,

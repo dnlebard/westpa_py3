@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 import sys
 from westpa.westtools import WESTTool, WESTDataReader
 from westpa.segment import Segment

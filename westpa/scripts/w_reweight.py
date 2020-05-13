@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 import logging
 
 # Let's suppress those numpy warnings.

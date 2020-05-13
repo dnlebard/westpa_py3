@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 import numpy
 import h5py
 from scipy.signal import fftconvolve

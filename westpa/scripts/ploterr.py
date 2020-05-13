@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 import logging
 import re, os
 from westpa.westtools import (
