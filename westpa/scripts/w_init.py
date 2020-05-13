@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-import sys
 import logging
 import numpy
 import argparse
@@ -9,7 +8,7 @@ from westpa import work_managers
 from westpa.work_managers.environment import make_work_manager
 
 import westpa
-from westpa.states import TargetState
+from westpa.states import TargetState, BasisState
 
 log = logging.getLogger("w_init")
 
@@ -116,9 +115,21 @@ if __name__ == "__main__":
                     TargetState.states_from_file(tstates_strio, system.pcoord_dtype)
                 )
 
-            if not args.basis_states:
-                log.error("At least one basis state is required")
-                sys.exit(3)
+            basis_states = []
+            if args.bstate_file:
+                basis_states.extend(BasisState.states_from_file(args.bstate_file))
+            if args.bstates:
+                for bstate_str in args.bstates:
+                    fields = bstate_str.split(",")
+                    label = fields[0]
+                    probability = float(fields[1])
+                    try:
+                        auxref = fields[2]
+                    except IndexError:
+                        auxref = None
+                    basis_states.append(
+                        BasisState(label=label, probability=probability, auxref=auxref)
+                    )
 
             # Check that the total probability of basis states adds to one
             tprob = sum(bstate.probability for bstate in basis_states)
@@ -129,7 +140,7 @@ if __name__ == "__main__":
                         pscale
                     )
                 )
-                for bstate in args.basis_states:
+                for bstate in basis_states:
                     bstate.probability *= pscale
 
             # Prepare simulation

@@ -1,5 +1,7 @@
 from westpa._rc import WESTRC
 
+from westpa.systems import WESTSystem
+
 # global RC object
 rc = WESTRC()
 

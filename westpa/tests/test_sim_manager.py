@@ -9,7 +9,6 @@ from westpa.binning.assign import RectilinearBinMapper
 from westpa import rc, h5io
 
 
-
 EXAMPLES_DIR = os.path.join(os.path.dirname(westpa.__file__), "examples")
 
 
@@ -20,10 +19,14 @@ class TestSimManager(TestCase):
 
         # Store west.h5 file in RAM for testing
         west_file_name = "west.h5"
-        west_file = h5io.WESTPAH5File(west_file_name, driver="core", backing_store=False)
+        west_file = h5io.WESTPAH5File(
+            west_file_name, driver="core", backing_store=False
+        )
 
         data_manager.we_h5file = west_file
-        data_manager.we_h5file_version = int(west_file["/"].attrs.get("west_file_format_version", 0))
+        data_manager.we_h5file_version = int(
+            west_file["/"].attrs.get("west_file_format_version", 0)
+        )
 
     def setUp(self):
         super().setUp()
