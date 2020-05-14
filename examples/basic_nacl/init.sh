@@ -1,7 +1,5 @@
-#!/bin/bash
-
 # Set up simulation environment
-source env.sh
+. ./env.sh
 
 # Clean up from previous/ failed runs
 rm -rf traj_segs seg_logs istates west.h5 
@@ -12,7 +10,7 @@ BSTATE_ARGS="--bstate-file $WEST_SIM_ROOT/bstates/bstates.txt"
 TSTATE_ARGS="--tstate-file $WEST_SIM_ROOT/tstate.file"
 
 # Run w_init
-$WEST_ROOT/bin/w_init \
+w_init.py \
   $BSTATE_ARGS \
   $TSTATE_ARGS \
   --segs-per-state 5 \
