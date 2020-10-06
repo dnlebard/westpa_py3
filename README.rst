@@ -14,7 +14,7 @@ Zwier, M.C., Adelman, J.L., Kaus, J.W., Pratt, A.J., Wong, K.F., Rego, N.B., Sua
 Wang, D. W., Grabe, M., Zuckerman, D. M., and Chong, L. T. "WESTPA: An Interoperable, Highly 
 Scalable Software Package For Weighted Ensemble Simulation and Analysis," J. Chem. Theory Comput., 11: 800−809 (2015). 
 
-See this page_ for an overview of weighted ensemble simulation.
+See this page_ and this powerpoint_ for an overview of weighted ensemble simulation.
 
 To help us fund development and improve WESTPA please fill out a one-minute survey_ and consider 
 contributing documentation or code to the WESTPA community.
@@ -24,6 +24,7 @@ License, Version 3. See the file ``COPYING`` for more information.
 
 .. _survey: https://docs.google.com/forms/d/e/1FAIpQLSfWaB2aryInU06cXrCyAFmhD_gPibgOfFk-dspLEsXuS9-RGQ/viewform
 .. _page: https://westpa.github.io/westpa/overview.html
+.. _powerpoint: https://pitt.box.com/s/metui7tsfwh3bcv1xgbbj4g6fe0uokag
 
 ------------
 Requirements
@@ -42,6 +43,8 @@ Obtaining and Installing WESTPA
 --------------------------------
 
 WESTPA is developed and tested on Unix-like operating systems, including Linux and Mac OS X.
+
+We recommend installing WESTPA through conda. See the quick install instructions on our `wiki`_ for how to do this. To install from source (not recommended), please continue reading.
 
 Before installing WESTPA, you will need to first install the Python 3 version provided by the latest free `Anaconda Python distribution`_. After installing the Anaconda Python distribution, either add the Python executable to your $PATH or set the environment variable WEST_PYTHON::
 
@@ -62,7 +65,8 @@ A westpa.sh script is created during installation, and will set the following en
 These environment variables must be set in order to run WESTPA on your computing cluster.
 
 .. _`releases page`: https://github.com/westpa/westpa/releases
-.. _`Anaconda Python distribution`: https://www.continuum.io/downloads 
+.. _`Anaconda Python distribution`: https://www.anaconda.com/products/individual
+.. _`wiki`: https://github.com/westpa/westpa/wiki/WESTPA-Quick-Installation
 
 ---------------
 Getting started
@@ -84,7 +88,7 @@ of their system, we invite you to contact Lillian Chong (ltchong AT pitt DOT edu
 a few days with her lab and/or setting up video conferencing sessions to help you get your 
 simulations off the ground.
 
-.. _here: https://github.com/westpa/westpa/wiki/WESTPA-Tutorials
+.. _here: https://github.com/westpa/westpa/wiki/Tutorials
 
 ------------
 Getting help
@@ -98,3 +102,9 @@ for obtaining help and support. See http://groups.google.com/group/westpa-users
 to sign up or search archived messages.
 
 .. _FAQ: https://westpa.github.io/westpa/users_guide/faq.html
+
+----------
+Developers
+----------
+
+Search archived messages or post to the westpa-devel Google group: https://groups.google.com/group/westpa-devel.
