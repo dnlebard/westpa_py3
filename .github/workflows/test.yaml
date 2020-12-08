@@ -6,6 +6,7 @@ on:
       - "master"
       - "westpa-2.0-restruct"
       - "westpa-2.0-tests"
+      - "westpa-2.0-tests_20d449e"
   pull_request:
     branches:
       - "master"
